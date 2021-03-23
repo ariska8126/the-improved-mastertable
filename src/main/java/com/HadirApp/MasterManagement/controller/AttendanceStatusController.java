@@ -5,8 +5,8 @@
  */
 package com.HadirApp.MasterManagement.controller;
 
-import com.HadirApp.MasterManagement.entity.BootcampLocation;
-import com.HadirApp.MasterManagement.repository.BootcampLocationRepository;
+import com.HadirApp.MasterManagement.entity.AttendanceStatus;
+import com.HadirApp.MasterManagement.repository.AttendanceStatusRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.net.URI;
@@ -29,104 +29,104 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  * @author creative
  */
 @RestController
-@RequestMapping("/api/master/bootcamp")
-@Api(tags = "Bootcamp Location Management")
-public class BootcampLocationController {
-
+@RequestMapping("/api/master/attendance")
+@Api(tags = "Attendance Status Managemet")
+public class AttendanceStatusController {
+    
     @Autowired
-    BootcampLocationRepository bootcampLocationRepository;
-
+    AttendanceStatusRepository attendanceStatusRepository;
+    
     public int maxId() {
-        String maxIdStr = bootcampLocationRepository.getMaxBootcamp();
+        String maxIdStr = attendanceStatusRepository.getMaxAttendance();
         int maxId = Integer.parseInt(maxIdStr);
 
         return maxId;
     }
-
+    
     // READ
-    @GetMapping("/getbootcamplocation")
-    @ApiOperation(value = "${BootcampLocationController.getbootcamplocation}")
-    public String getAllBootcampLocation() {
+    @GetMapping("/getattendancestatus")
+    @ApiOperation(value = "${AttendanceStatusController.getattendancestatus}")
+    public String getAllAttendance() {
 
-        List<BootcampLocation> bootcampLocation = bootcampLocationRepository.findAll();
+        List<AttendanceStatus> attendanceStatus = attendanceStatusRepository.findAll();
 
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject2 = new JSONObject();
 
-        for (BootcampLocation bl : bootcampLocation) {
+        for (AttendanceStatus as : attendanceStatus) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", bl.getBootcampLocationId());
-            jsonObject.put("name", bl.getBootcampLocationName());
+            jsonObject.put("id", as.getAttendanceStatusId());
+            jsonObject.put("name", as.getAttendanceStatusName());
             jsonArray.add(jsonObject);
         }
 
-        jsonObject2.put("bootcamp_location_list", jsonArray);
+        jsonObject2.put("attendance_status_list", jsonArray);
 
         return jsonObject2.toString();
     }
-
+    
     // Read all where status = true
-    @GetMapping("/getactivebootcamplocation")
-    @ApiOperation(value = "${BootcampLocationController.getactivebootcamplocation}")
-    public String getActiveBootcampLocation() {
+    @GetMapping("/getactiveattendancestatus")
+    @ApiOperation(value = "${AttendanceStatusController.getactiveattendancestatus}")
+    public String getActiveAttendance() {
 
-        List<BootcampLocation> bootcampLocation = bootcampLocationRepository.getActiveBootcamp();
+        List<AttendanceStatus> attendanceStatus = attendanceStatusRepository.getActiveAttendance();
 
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject2 = new JSONObject();
 
-        for (BootcampLocation bl : bootcampLocation) {
+        for (AttendanceStatus as : attendanceStatus) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", bl.getBootcampLocationId());
-            jsonObject.put("name", bl.getBootcampLocationName());
+            jsonObject.put("id", as.getAttendanceStatusId());
+            jsonObject.put("name", as.getAttendanceStatusName());
             jsonArray.add(jsonObject);
         }
 
-        jsonObject2.put("bootcamp_location_list", jsonArray);
+        jsonObject2.put("attendance_status_list", jsonArray);
 
         return jsonObject2.toString();
     }
-
+    
     // Read by ID
-    @GetMapping("/getbootcamplocation/{id}")
-    @ApiOperation(value = "${BootcampLocationController.getbootcamplocationbyid}")
-    public String getBootcampLocationById(@PathVariable int id) {
-        Optional<BootcampLocation> bootcampLocation = bootcampLocationRepository.findById(id);
+    @GetMapping("/getattendancestatus/{id}")
+    @ApiOperation(value = "${AttendanceStatusController.getattendancebyid}")
+    public String getAttendanceStatusById(@PathVariable int id) {
+        Optional<AttendanceStatus> attendanceStatusOptional = attendanceStatusRepository.findById(id);
 
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObject2 = new JSONObject();
 
-        if (!bootcampLocation.isPresent()) {
+        if (!attendanceStatusOptional.isPresent()) {
             jsonObject.put("description", "data not found");
             jsonObject.put("status", "false");
             jsonArray.add(jsonObject);
 
-            jsonObject2.put("bootcamp_location", jsonArray);
+            jsonObject2.put("attendance_status", jsonArray);
 
             return jsonObject.toString();
         }
 
-        jsonObject.put("id", bootcampLocation.get().getBootcampLocationId());
-        jsonObject.put("name", bootcampLocation.get().getBootcampLocationName());
+        jsonObject.put("id", attendanceStatusOptional.get().getAttendanceStatusId());
+        jsonObject.put("name", attendanceStatusOptional.get().getAttendanceStatusName());
         jsonArray.add(jsonObject);
 
-        jsonObject2.put("bootcamp_location", jsonArray);
+        jsonObject2.put("attendance_status", jsonArray);
 
         return jsonObject.toString();
     }
     
     // UPDATE AND SOFT DELETE
     @PutMapping("/update/{id}")
-    @ApiOperation(value = "${BootcampLocationController.update}")
-    public String updateBootcampLocation(@RequestBody BootcampLocation bootcampLocation, @PathVariable int id) {
-        Optional<BootcampLocation> bootcampLocaOptional = bootcampLocationRepository.findById(id);
-        if (!bootcampLocaOptional.isPresent()) {
+    @ApiOperation(value = "${AttendanceStatusController.update}")
+    public String updateAttendanceStatus(@RequestBody AttendanceStatus attendanceStatus, @PathVariable int id) {
+        Optional<AttendanceStatus> attendanceStatusOptional = attendanceStatusRepository.findById(id);
+        if (!attendanceStatusOptional.isPresent()) {
             return "fail";
         }
 
-        bootcampLocation.setBootcampLocationId(id);
-        bootcampLocationRepository.save(bootcampLocation);
+        attendanceStatus.setAttendanceStatusId(id);
+        attendanceStatusRepository.save(attendanceStatus);
 
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
@@ -142,14 +142,14 @@ public class BootcampLocationController {
         return jsonObject.toString();
     }
     
-    // CREATE
+     // CREATE
     @PostMapping("/insert")
-    @ApiOperation(value = "${BootcampLocationController.insert}")
-    public String insertBootcamp(@RequestBody BootcampLocation bootcampLocation) {
+    @ApiOperation(value = "${AttendanceStatusController.insert}")
+    public String insertAttendance(@RequestBody AttendanceStatus attendanceStatus) {
         int beforeInsert = maxId();
-        BootcampLocation savedBL = bootcampLocationRepository.save(bootcampLocation);
+        AttendanceStatus savedAS = attendanceStatusRepository.save(attendanceStatus);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}")
-                .buildAndExpand(savedBL.getBootcampLocationId()).toUri();
+                .buildAndExpand(savedAS.getAttendanceStatusId()).toUri();
         int afterInsert = maxId();
 
         JSONArray jsonArray = new JSONArray();

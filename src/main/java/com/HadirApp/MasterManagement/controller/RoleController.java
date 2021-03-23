@@ -32,7 +32,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/api/master/role")
-@Api(tags = "MasterManagemet")
+@Api(tags = "Role Managemet")
 public class RoleController {
 
     @Autowired
@@ -57,8 +57,8 @@ public class RoleController {
 
         for (Role roles : role) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id_role", roles.getRoleId());
-            jsonObject.put("name_role", roles.getRoleName());
+            jsonObject.put("id", roles.getRoleId());
+            jsonObject.put("name", roles.getRoleName());
             jsonArray.add(jsonObject);
         }
 
@@ -165,4 +165,6 @@ public class RoleController {
 
         return jsonObject.toString();
     }
+    
+    
 }
