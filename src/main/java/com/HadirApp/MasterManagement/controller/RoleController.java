@@ -6,6 +6,7 @@
 package com.HadirApp.MasterManagement.controller;
 
 import com.HadirApp.MasterManagement.entity.Role;
+import com.HadirApp.MasterManagement.exception.ResourceNotFoundException;
 import com.HadirApp.MasterManagement.repository.RoleRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -110,31 +111,45 @@ public class RoleController {
 
         return jsonObject.toString();
     }
-
+    
     // UPDATE AND SOFT DELETE
     @PutMapping("/update/{id}")
     @ApiOperation(value = "${RoleController.update}")
     public String updateRole(@RequestBody Role role, @PathVariable int id) {
-        Optional<Role> roleOptional = roleRepository.findById(id);
-        if (!roleOptional.isPresent()) {
-            return "fail";
-        }
-
-        role.setRoleId(id);
-        roleRepository.save(role);
-
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObject2 = new JSONObject();
 
-        jsonObject.put("status", "true");
-        jsonObject.put("description", "update successfully");
-        jsonArray.add(jsonObject);
+        Optional<Role> roleOptional = roleRepository.findById(id);
+        if (!roleOptional.isPresent()) {
+            jsonObject.put("status", "false");
+            jsonObject.put("description", "update unsuccessfully");
+            jsonArray.add(jsonObject);
+        }
 
-        jsonObject2.put("status", jsonArray);
+        String name = roleOptional.get().getRoleName();
+        String active = roleOptional.get().getRoleActive();
+        role.setRoleId(id);
+        roleRepository.save(role);
+        String nameUpdate = roleOptional.get().getRoleName();
+        String activeUpdate = roleOptional.get().getRoleActive();
 
-        //return ResponseEntity.noContent().build();
-        return jsonObject.toString();
+        if (name.equals(nameUpdate) && active.equals(activeUpdate)) {
+            jsonObject.put("status", "true");
+            jsonObject.put("description", "there is no data udated");
+            jsonArray.add(jsonObject);
+            jsonObject2.put("status", jsonArray);
+
+            return jsonObject.toString();
+        } else {
+            jsonObject.put("status", "true");
+            jsonObject.put("description", "update successfully");
+            jsonArray.add(jsonObject);
+
+            jsonObject2.put("status", jsonArray);
+
+            return jsonObject.toString();
+        }
     }
 
     // CREATE
@@ -155,16 +170,13 @@ public class RoleController {
             jsonObject.put("status", "true");
             jsonObject.put("description", "insert successfully");
             jsonArray.add(jsonObject);
-        } else{
+        } else {
             jsonObject.put("status", "false");
             jsonObject.put("description", "insert unsuccessfully");
             jsonArray.add(jsonObject);
         }
-
         jsonObject2.put("status", jsonArray);
-
         return jsonObject.toString();
     }
-    
-    
+
 }

@@ -98,6 +98,12 @@
         </dependency>
         
         <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+        
+        <dependency>
             <!-- Automated JSON API documentation for API's built with Spring -->
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
