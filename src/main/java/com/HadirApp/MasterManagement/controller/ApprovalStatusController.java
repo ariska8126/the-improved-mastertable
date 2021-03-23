@@ -89,7 +89,7 @@ public class ApprovalStatusController {
 
     //update
     @PutMapping("update{id}")
-    @ApiOperation(value = "ApprovalStatusController.update")
+    @ApiOperation(value = "${ApprovalStatusController.update}")
     public String updateApprovalStatus(@RequestBody ApprovalStatus appstatus, @PathVariable int id) {
         Optional<ApprovalStatus> appOptional = repository.findById(id);
 
