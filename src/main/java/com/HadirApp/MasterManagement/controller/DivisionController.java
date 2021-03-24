@@ -74,8 +74,8 @@ public class DivisionController {
 
         for (Division div : division) {
             JSONObject jSONObject = new JSONObject();
-            jSONObject.put("id", div.getDivisionId());
-            jSONObject.put("name", div.getDivisionName());
+            jSONObject.put("division_id", div.getDivisionId());
+            jSONObject.put("division_name", div.getDivisionName());
             jSONArray.add(jSONObject);
         }
         j.put("division_list", jSONArray);
@@ -97,8 +97,8 @@ public class DivisionController {
         JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
-        jSONObject.put("id", division.get().getDivisionId());
-        jSONObject.put("name", division.get().getDivisionName());
+        jSONObject.put("division_id", division.get().getDivisionId());
+        jSONObject.put("division_name", division.get().getDivisionName());
         jSONArray.add(jSONObject);
         
         jSONObject1.put("division", jSONArray);
@@ -111,27 +111,40 @@ public class DivisionController {
     @PutMapping("update{id}")
     @ApiOperation(value="DivisionController.update")
     public String updateDivision(@RequestBody Division division, @PathVariable int id){
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject2 = new JSONObject();
         Optional<Division> divOptional = repository.findById(id);
         
         if(!divOptional.isPresent()){
             return "fail";
         }
         
+        String name = divOptional.get().getDivisionName();
+        String active = divOptional.get().getDivisionActive();
+        
         division.setDivisionId(id);
         repository.save(division);
         
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject = new JSONObject();
-        JSONObject jsonObject2 = new JSONObject();
+        String nameUpdate = divOptional.get().getDivisionName();
+        String activeUpdate = divOptional.get().getDivisionActive();
+        
+        if (name.equals(nameUpdate) && active.equals(activeUpdate)) {
+            jsonObject.put("status", "true");
+            jsonObject.put("description", "there is no data udated");
+            jsonArray.add(jsonObject);
+            jsonObject2.put("status", jsonArray);
 
-        jsonObject.put("status", "true");
-        jsonObject.put("description", "update successfully");
-        jsonArray.add(jsonObject);
+            return jsonObject.toString();
+        } else {
+            jsonObject.put("status", "true");
+            jsonObject.put("description", "update successfully");
+            jsonArray.add(jsonObject);
 
-        jsonObject2.put("status", jsonArray);
+            jsonObject2.put("status", jsonArray);
 
-        //return ResponseEntity.noContent().build();
-        return jsonObject2.toString();
+            return jsonObject.toString();
+        }
     }
     
     //create

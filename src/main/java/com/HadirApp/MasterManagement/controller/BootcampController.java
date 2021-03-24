@@ -80,7 +80,8 @@ public class BootcampController {
         for (Bootcamp bl : bootcamp) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("bootcamp_id", bl.getBootcampId());
-            jsonObject.put("name", bl.getBootcampName());
+            jsonObject.put("bootcamp_name", bl.getBootcampName());
+            jsonObject.put("bootcamp_location", bl.getBootcampLocation());
             jsonArray.add(jsonObject);
         }
 
@@ -101,8 +102,9 @@ public class BootcampController {
 
         for (Bootcamp bl : bootcamp) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id_bootcamp", bl.getBootcampId());
-            jsonObject.put("name", bl.getBootcampName());
+            jsonObject.put("bootcamp_id", bl.getBootcampId());
+            jsonObject.put("bootcamp_name", bl.getBootcampName());
+            jsonObject.put("bootcamp_location", bl.getBootcampLocation());
             jsonArray.add(jsonObject);
         }
 
@@ -131,9 +133,9 @@ public class BootcampController {
             return jsonObject.toString();
         }
 
-        jsonObject.put("id_bootcamp", bootcamp.get().getBootcampId());
-        jsonObject.put("name_bootcamp", bootcamp.get().getBootcampName());
-        jsonArray.add(jsonObject);
+        jsonObject.put("bootcamp_id", bootcamp.get().getBootcampId());
+        jsonObject.put("bootcamp_name", bootcamp.get().getBootcampName());
+        jsonObject.put("bootcamp_location", bootcamp.get().getBootcampLocation());
 
         jsonObject2.put("bootcamp", jsonArray);
 
@@ -144,25 +146,43 @@ public class BootcampController {
     @PutMapping("/update/{id}")
     @ApiOperation(value = "${BootcampController.update}")
     public String updateBootcamp(@RequestBody Bootcamp bootcamp, @PathVariable String id) {
+        
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject2 = new JSONObject();
+        
         Optional<Bootcamp> bootcampOptional = bootcampRepository.findById(id);
         if (!bootcampOptional.isPresent()) {
             return "fail";
         }
+        
+        String name = bootcampOptional.get().getBootcampName();
+        String active = bootcampOptional.get().getBootcampActive();
+        String location = bootcampOptional.get().getBootcampLocation();
+        
         bootcamp.setBootcampId(id);
         bootcampRepository.save(bootcamp);
+        
+        String nameUpdate = bootcampOptional.get().getBootcampName();
+        String activeUpdate = bootcampOptional.get().getBootcampActive();
+        String locationUpdate = bootcampOptional.get().getBootcampLocation();
 
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject = new JSONObject();
-        JSONObject jsonObject2 = new JSONObject();
+        if (name.equals(nameUpdate) && active.equals(activeUpdate) && location.equals(locationUpdate)) {
+            jsonObject.put("status", "true");
+            jsonObject.put("description", "there is no data udated");
+            jsonArray.add(jsonObject);
+            jsonObject2.put("status", jsonArray);
 
-        jsonObject.put("status", "true");
-        jsonObject.put("description", "update successfully");
-        jsonArray.add(jsonObject);
+            return jsonObject.toString();
+        } else {
+            jsonObject.put("status", "true");
+            jsonObject.put("description", "update successfully");
+            jsonArray.add(jsonObject);
 
-        jsonObject2.put("status", jsonArray);
+            jsonObject2.put("status", jsonArray);
 
-        //return ResponseEntity.noContent().build();
-        return jsonObject.toString();
+            return jsonObject.toString();
+        }
     }
     
     // CREATE
