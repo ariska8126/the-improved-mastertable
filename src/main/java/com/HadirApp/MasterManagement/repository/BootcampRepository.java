@@ -5,8 +5,9 @@
  */
 package com.HadirApp.MasterManagement.repository;
 
-import com.HadirApp.MasterManagement.entity.BootcampLocation;
+import com.HadirApp.MasterManagement.entity.Bootcamp;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,10 +15,12 @@ import org.springframework.data.jpa.repository.Query;
  *
  * @author creative
  */
-public interface BootcampLocationRepository extends JpaRepository<BootcampLocation, Integer>{
-    @Query(value = "SELECT * FROM bootcamp_location where bootcamp_location.bootcamp_location_active = 'true'", nativeQuery = true)
-    List <BootcampLocation> getActiveBootcamp();
+public interface BootcampRepository extends JpaRepository<Bootcamp, String>{
+    @Query(value = "SELECT * FROM bootcamp where bootcamp.bootcamp_active = 'true'", nativeQuery = true)
+    List <Bootcamp> getActiveBootcamp();
     
-    @Query(value = "SELECT count(*) from bootcamp_location", nativeQuery = true)
+    @Query(value = "SELECT count(*) from bootcamp", nativeQuery = true)
     public String getMaxBootcamp();
+
+    public Optional<Bootcamp> findById(String id);
 }

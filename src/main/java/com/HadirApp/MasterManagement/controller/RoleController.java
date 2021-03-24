@@ -32,7 +32,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/api/master/role")
-@Api(tags = "MasterManagemet")
+@Api(tags = "Role Managemet")
 public class RoleController {
 
     @Autowired
@@ -57,8 +57,8 @@ public class RoleController {
 
         for (Role roles : role) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id_role", roles.getRoleId());
-            jsonObject.put("name_role", roles.getRoleName());
+            jsonObject.put("role_id", roles.getRoleId());
+            jsonObject.put("role_name", roles.getRoleName());
             jsonArray.add(jsonObject);
         }
 
@@ -79,8 +79,8 @@ public class RoleController {
 
         for (Role roles : role) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id_role", roles.getRoleId());
-            jsonObject.put("name_role", roles.getRoleName());
+            jsonObject.put("role_id", roles.getRoleId());
+            jsonObject.put("role_name", roles.getRoleName());
             jsonArray.add(jsonObject);
         }
 
@@ -102,39 +102,54 @@ public class RoleController {
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObject2 = new JSONObject();
 
-        jsonObject.put("id_role", role.get().getRoleId());
-        jsonObject.put("name_role", role.get().getRoleName());
+        jsonObject.put("role_id", role.get().getRoleId());
+        jsonObject.put("role_name", role.get().getRoleName());
         jsonArray.add(jsonObject);
 
         jsonObject2.put("role", jsonArray);
 
         return jsonObject.toString();
     }
-
+    
     // UPDATE AND SOFT DELETE
     @PutMapping("/update/{id}")
     @ApiOperation(value = "${RoleController.update}")
     public String updateRole(@RequestBody Role role, @PathVariable int id) {
-        Optional<Role> roleOptional = roleRepository.findById(id);
-        if (!roleOptional.isPresent()) {
-            return "fail";
-        }
-
-        role.setRoleId(id);
-        roleRepository.save(role);
-
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObject2 = new JSONObject();
 
-        jsonObject.put("status", "true");
-        jsonObject.put("description", "update successfully");
-        jsonArray.add(jsonObject);
+        Optional<Role> roleOptional = roleRepository.findById(id);
+        if (!roleOptional.isPresent()) {
+            jsonObject.put("status", "false");
+            jsonObject.put("description", "update unsuccessfully");
+            jsonArray.add(jsonObject);
+        }
+        
 
-        jsonObject2.put("status", jsonArray);
+        String name = roleOptional.get().getRoleName();
+        String active = roleOptional.get().getRoleActive();
+        role.setRoleId(id);
+        roleRepository.save(role);
+        String nameUpdate = roleOptional.get().getRoleName();
+        String activeUpdate = roleOptional.get().getRoleActive();
 
-        //return ResponseEntity.noContent().build();
-        return jsonObject.toString();
+        if (name.equals(nameUpdate) && active.equals(activeUpdate)) {
+            jsonObject.put("status", "true");
+            jsonObject.put("description", "there is no data udated");
+            jsonArray.add(jsonObject);
+            jsonObject2.put("status", jsonArray);
+
+            return jsonObject.toString();
+        } else {
+            jsonObject.put("status", "true");
+            jsonObject.put("description", "update successfully");
+            jsonArray.add(jsonObject);
+
+            jsonObject2.put("status", jsonArray);
+
+            return jsonObject.toString();
+        }
     }
 
     // CREATE
@@ -155,14 +170,13 @@ public class RoleController {
             jsonObject.put("status", "true");
             jsonObject.put("description", "insert successfully");
             jsonArray.add(jsonObject);
-        } else{
+        } else {
             jsonObject.put("status", "false");
             jsonObject.put("description", "insert unsuccessfully");
             jsonArray.add(jsonObject);
         }
-
         jsonObject2.put("status", jsonArray);
-
         return jsonObject.toString();
     }
+
 }

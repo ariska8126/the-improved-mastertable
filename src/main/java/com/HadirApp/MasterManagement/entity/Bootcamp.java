@@ -6,20 +6,15 @@
 package com.HadirApp.MasterManagement.entity;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -44,13 +39,12 @@ public class Bootcamp implements Serializable {
     @Column(name = "bootcamp_name")
     private String bootcampName;
     @Basic(optional = false)
+    @Lob
+    @Column(name = "bootcamp_location")
+    private String bootcampLocation;
+    @Basic(optional = false)
     @Column(name = "bootcamp_active")
     private String bootcampActive;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bootcampId")
-    private List<BootcampDetail> bootcampDetailList;
-    @JoinColumn(name = "bootcamp_location_id", referencedColumnName = "bootcamp_location_id")
-    @ManyToOne(optional = false)
-    private BootcampLocation bootcampLocationId;
 
     public Bootcamp() {
     }
@@ -59,9 +53,10 @@ public class Bootcamp implements Serializable {
         this.bootcampId = bootcampId;
     }
 
-    public Bootcamp(String bootcampId, String bootcampName, String bootcampActive) {
+    public Bootcamp(String bootcampId, String bootcampName, String bootcampLocation, String bootcampActive) {
         this.bootcampId = bootcampId;
         this.bootcampName = bootcampName;
+        this.bootcampLocation = bootcampLocation;
         this.bootcampActive = bootcampActive;
     }
 
@@ -81,29 +76,20 @@ public class Bootcamp implements Serializable {
         this.bootcampName = bootcampName;
     }
 
+    public String getBootcampLocation() {
+        return bootcampLocation;
+    }
+
+    public void setBootcampLocation(String bootcampLocation) {
+        this.bootcampLocation = bootcampLocation;
+    }
+
     public String getBootcampActive() {
         return bootcampActive;
     }
 
     public void setBootcampActive(String bootcampActive) {
         this.bootcampActive = bootcampActive;
-    }
-
-    @XmlTransient
-    public List<BootcampDetail> getBootcampDetailList() {
-        return bootcampDetailList;
-    }
-
-    public void setBootcampDetailList(List<BootcampDetail> bootcampDetailList) {
-        this.bootcampDetailList = bootcampDetailList;
-    }
-
-    public BootcampLocation getBootcampLocationId() {
-        return bootcampLocationId;
-    }
-
-    public void setBootcampLocationId(BootcampLocation bootcampLocationId) {
-        this.bootcampLocationId = bootcampLocationId;
     }
 
     @Override
