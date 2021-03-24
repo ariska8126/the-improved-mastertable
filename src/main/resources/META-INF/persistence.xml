@@ -6,7 +6,6 @@
     <class>com.HadirApp.MasterManagement.entity.Bootcamp</class>
     <class>com.HadirApp.MasterManagement.entity.ApprovalStatus</class>
     <class>com.HadirApp.MasterManagement.entity.Role</class>
-    <class>com.HadirApp.MasterManagement.entity.Users</class>
     <class>com.HadirApp.MasterManagement.entity.BootcampDetail</class>
     <class>com.HadirApp.MasterManagement.entity.Division</class>
     <class>com.HadirApp.MasterManagement.entity.Request</class>
@@ -14,6 +13,8 @@
     <class>com.HadirApp.MasterManagement.entity.BootcampLocation</class>
     <class>com.HadirApp.MasterManagement.entity.CalendarHoliday</class>
     <class>com.HadirApp.MasterManagement.entity.Attendance</class>
+    <class>com.HadirApp.MasterManagement.entity.__Users</class>
+    <class>com.HadirApp.MasterManagement.entity.Users</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:8889/hadir_db?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

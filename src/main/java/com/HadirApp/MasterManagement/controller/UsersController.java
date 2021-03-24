@@ -136,8 +136,11 @@ public class UsersController {
         String userEmail = (String) input.get("userEmail");
         String userActive = (String) input.get("userActive");
         String userPhoto = (String) input.get("userPhoto");
-        int roleId = (int) input.get("roleId");
-        int divisionId = (int) input.get("divisionId");
+        
+        String role = (String) input.get("roleId");
+        String division = (String) input.get("divisionId");
+        int roleId = Integer.parseInt(role);
+        int divisionId = Integer.parseInt(division);
         
         user.setUserFullname(userFullname);
         user.setUserEmail(userEmail);
@@ -174,8 +177,11 @@ public class UsersController {
         String userEmail = (String) input.get("userEmail");
         String userActive = (String) input.get("userActive");
         String userPhoto = (String) input.get("userPhoto");
-        int roleId = (int) input.get("roleId");
-        int divisionId = (int) input.get("divisionId");
+        
+        String role = (String) input.get("roleId");
+        String division = (String) input.get("divisionId");
+        int roleId = Integer.parseInt(role);
+        int divisionId = Integer.parseInt(division);
 
         String newID = getAlphaNumericString(8);
         System.out.println("new generate ID: " + newID);

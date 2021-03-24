@@ -120,5 +120,6 @@ public class Role implements Serializable {
     public String toString() {
         return "com.HadirApp.MasterManagement.entity.Role[ roleId=" + roleId + " ]";
     }
-    
+
+
 }
