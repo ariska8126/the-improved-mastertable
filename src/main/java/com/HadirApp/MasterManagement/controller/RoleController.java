@@ -6,7 +6,6 @@
 package com.HadirApp.MasterManagement.controller;
 
 import com.HadirApp.MasterManagement.entity.Role;
-import com.HadirApp.MasterManagement.exception.ResourceNotFoundException;
 import com.HadirApp.MasterManagement.repository.RoleRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
