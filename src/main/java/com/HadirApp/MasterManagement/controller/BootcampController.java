@@ -5,8 +5,7 @@
  */
 package com.HadirApp.MasterManagement.controller;
 
-import com.HadirApp.MasterManagement.entity.BootcampLocation;
-import com.HadirApp.MasterManagement.repository.BootcampLocationRepository;
+import com.HadirApp.MasterManagement.entity.Bootcamp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.net.URI;
@@ -23,6 +22,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import com.HadirApp.MasterManagement.repository.BootcampRepository;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  *
@@ -30,103 +33,123 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/api/master/bootcamp")
-@Api(tags = "Bootcamp Location Management")
-public class BootcampLocationController {
+@Api(tags = "Bootcamp Management")
+public class BootcampController {
 
     @Autowired
-    BootcampLocationRepository bootcampLocationRepository;
+    BootcampRepository bootcampRepository;
 
     public int maxId() {
-        String maxIdStr = bootcampLocationRepository.getMaxBootcamp();
+        String maxIdStr = bootcampRepository.getMaxBootcamp();
         int maxId = Integer.parseInt(maxIdStr);
 
         return maxId;
     }
+    
+    static String getNumericString(int n) {
+
+        String NumericString = "0123456789";
+        StringBuilder sb = new StringBuilder(n);
+
+        for (int i = 0; i < n; i++) {
+
+            // generate a random number between 
+            // 0 to AlphaNumericString variable length 
+            int index
+                    = (int) (NumericString.length()
+                    * Math.random());
+
+            // add Character one by one in end of sb 
+            sb.append(NumericString
+                    .charAt(index));
+        }
+
+        return sb.toString();
+    }
 
     // READ
-    @GetMapping("/getbootcamplocation")
-    @ApiOperation(value = "${BootcampLocationController.getbootcamplocation}")
-    public String getAllBootcampLocation() {
+    @GetMapping("/getbootcamp")
+    @ApiOperation(value = "${BootcampController.getbootcamp}")
+    public String getAllBootcamp() {
 
-        List<BootcampLocation> bootcampLocation = bootcampLocationRepository.findAll();
+        List<Bootcamp> bootcamp = bootcampRepository.findAll();
 
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject2 = new JSONObject();
 
-        for (BootcampLocation bl : bootcampLocation) {
+        for (Bootcamp bl : bootcamp) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", bl.getBootcampLocationId());
-            jsonObject.put("name", bl.getBootcampLocationName());
+            jsonObject.put("bootcamp_id", bl.getBootcampId());
+            jsonObject.put("name", bl.getBootcampName());
             jsonArray.add(jsonObject);
         }
 
-        jsonObject2.put("bootcamp_location_list", jsonArray);
+        jsonObject2.put("bootcamp_list", jsonArray);
 
         return jsonObject2.toString();
     }
 
     // Read all where status = true
-    @GetMapping("/getactivebootcamplocation")
-    @ApiOperation(value = "${BootcampLocationController.getactivebootcamplocation}")
-    public String getActiveBootcampLocation() {
+    @GetMapping("/getactivebootcamp")
+    @ApiOperation(value = "${BootcampController.getactivebootcamp}")
+    public String getActiveBootcamp() {
 
-        List<BootcampLocation> bootcampLocation = bootcampLocationRepository.getActiveBootcamp();
+        List<Bootcamp> bootcamp = bootcampRepository.getActiveBootcamp();
 
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject2 = new JSONObject();
 
-        for (BootcampLocation bl : bootcampLocation) {
+        for (Bootcamp bl : bootcamp) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", bl.getBootcampLocationId());
-            jsonObject.put("name", bl.getBootcampLocationName());
+            jsonObject.put("id_bootcamp", bl.getBootcampId());
+            jsonObject.put("name", bl.getBootcampName());
             jsonArray.add(jsonObject);
         }
 
-        jsonObject2.put("bootcamp_location_list", jsonArray);
+        jsonObject2.put("bootcamp_list", jsonArray);
 
         return jsonObject2.toString();
     }
 
     // Read by ID
-    @GetMapping("/getbootcamplocation/{id}")
-    @ApiOperation(value = "${BootcampLocationController.getbootcamplocationbyid}")
-    public String getBootcampLocationById(@PathVariable int id) {
-        Optional<BootcampLocation> bootcampLocation = bootcampLocationRepository.findById(id);
+    @GetMapping("/getbootcamp/{id}")
+    @ApiOperation(value = "${BootcampController.getbootcampbyid}")
+    public String getBootcampById(@PathVariable String id) {
+        Optional<Bootcamp> bootcamp = bootcampRepository.findById(id);
 
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObject2 = new JSONObject();
 
-        if (!bootcampLocation.isPresent()) {
+        if (!bootcamp.isPresent()) {
             jsonObject.put("description", "data not found");
             jsonObject.put("status", "false");
             jsonArray.add(jsonObject);
 
-            jsonObject2.put("bootcamp_location", jsonArray);
+            jsonObject2.put("bootcamp", jsonArray);
 
             return jsonObject.toString();
         }
 
-        jsonObject.put("id", bootcampLocation.get().getBootcampLocationId());
-        jsonObject.put("name", bootcampLocation.get().getBootcampLocationName());
+        jsonObject.put("id_bootcamp", bootcamp.get().getBootcampId());
+        jsonObject.put("name_bootcamp", bootcamp.get().getBootcampName());
         jsonArray.add(jsonObject);
 
-        jsonObject2.put("bootcamp_location", jsonArray);
+        jsonObject2.put("bootcamp", jsonArray);
 
         return jsonObject.toString();
     }
     
     // UPDATE AND SOFT DELETE
     @PutMapping("/update/{id}")
-    @ApiOperation(value = "${BootcampLocationController.update}")
-    public String updateBootcampLocation(@RequestBody BootcampLocation bootcampLocation, @PathVariable int id) {
-        Optional<BootcampLocation> bootcampLocaOptional = bootcampLocationRepository.findById(id);
-        if (!bootcampLocaOptional.isPresent()) {
+    @ApiOperation(value = "${BootcampController.update}")
+    public String updateBootcamp(@RequestBody Bootcamp bootcamp, @PathVariable String id) {
+        Optional<Bootcamp> bootcampOptional = bootcampRepository.findById(id);
+        if (!bootcampOptional.isPresent()) {
             return "fail";
         }
-
-        bootcampLocation.setBootcampLocationId(id);
-        bootcampLocationRepository.save(bootcampLocation);
+        bootcamp.setBootcampId(id);
+        bootcampRepository.save(bootcamp);
 
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
@@ -144,12 +167,21 @@ public class BootcampLocationController {
     
     // CREATE
     @PostMapping("/insert")
-    @ApiOperation(value = "${BootcampLocationController.insert}")
-    public String insertBootcamp(@RequestBody BootcampLocation bootcampLocation) {
+    @ApiOperation(value = "${BootcampController.insert}")
+    public String insertBootcamp(@RequestBody Bootcamp bootcamp) {
         int beforeInsert = maxId();
-        BootcampLocation savedBL = bootcampLocationRepository.save(bootcampLocation);
+        
+        // Generate bootcamp id
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
+        Date date = new Date();
+        String currentYear = formatter.format(date);
+        String randomNumber = getNumericString(4);
+        String idBootcamp = currentYear+randomNumber;
+        
+        bootcamp.setBootcampId(idBootcamp);
+        Bootcamp savedBL = bootcampRepository.save(bootcamp);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}")
-                .buildAndExpand(savedBL.getBootcampLocationId()).toUri();
+                .buildAndExpand(savedBL.getBootcampId()).toUri();
         int afterInsert = maxId();
 
         JSONArray jsonArray = new JSONArray();

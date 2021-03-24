@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -34,6 +35,11 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Bootcamp.findByBootcampName", query = "SELECT b FROM Bootcamp b WHERE b.bootcampName = :bootcampName"),
     @NamedQuery(name = "Bootcamp.findByBootcampActive", query = "SELECT b FROM Bootcamp b WHERE b.bootcampActive = :bootcampActive")})
 public class Bootcamp implements Serializable {
+
+    @Basic(optional = false)
+    @Lob
+    @Column(name = "bootcamp_location")
+    private String bootcampLocation;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -129,6 +135,14 @@ public class Bootcamp implements Serializable {
     @Override
     public String toString() {
         return "com.HadirApp.MasterManagement.entity.Bootcamp[ bootcampId=" + bootcampId + " ]";
+    }
+
+    public String getBootcampLocation() {
+        return bootcampLocation;
+    }
+
+    public void setBootcampLocation(String bootcampLocation) {
+        this.bootcampLocation = bootcampLocation;
     }
     
 }
