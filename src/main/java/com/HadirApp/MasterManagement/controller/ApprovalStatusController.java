@@ -54,8 +54,8 @@ public class ApprovalStatusController {
 
         for (ApprovalStatus a : ap) {
             JSONObject jSONObject = new JSONObject();
-            jSONObject.put("id", a.getApprovalStatusId());
-            jSONObject.put("name", a.getApprovalStatusName());
+            jSONObject.put("approval_status_id", a.getApprovalStatusId());
+            jSONObject.put("approval_status_name", a.getApprovalStatusName());
             jSONArray.add(jSONObject);
         }
         j.put("approvalstatus_list", jSONArray);
@@ -77,8 +77,8 @@ public class ApprovalStatusController {
         JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
-        jSONObject.put("id", app.get().getApprovalStatusId());
-        jSONObject.put("name", app.get().getApprovalStatusName());
+        jSONObject.put("approval_status_id", app.get().getApprovalStatusId());
+        jSONObject.put("approval_status_name", app.get().getApprovalStatusName());
         jSONArray.add(jSONObject);
 
         jSONObject1.put("approvalstatus", jSONArray);
@@ -91,27 +91,40 @@ public class ApprovalStatusController {
     @PutMapping("update{id}")
     @ApiOperation(value = "${ApprovalStatusController.update}")
     public String updateApprovalStatus(@RequestBody ApprovalStatus appstatus, @PathVariable int id) {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject2 = new JSONObject();
+        
         Optional<ApprovalStatus> appOptional = repository.findById(id);
 
         if (!appOptional.isPresent()) {
             return "fail";
         }
-
+        String name = appOptional.get().getApprovalStatusName();
+        String active = appOptional.get().getApprovalStatusName();
+        
         appstatus.setApprovalStatusId(id);
         repository.save(appstatus);
+        
+        String nameUpdate = appOptional.get().getApprovalStatusName();
+        String activeUpdate = appOptional.get().getApprovalStatusName();
+        
+        if (name.equals(nameUpdate) && active.equals(activeUpdate)) {
+            jsonObject.put("status", "true");
+            jsonObject.put("description", "there is no data udated");
+            jsonArray.add(jsonObject);
+            jsonObject2.put("status", jsonArray);
 
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject = new JSONObject();
-        JSONObject jsonObject2 = new JSONObject();
+            return jsonObject.toString();
+        } else {
+            jsonObject.put("status", "true");
+            jsonObject.put("description", "update successfully");
+            jsonArray.add(jsonObject);
 
-        jsonObject.put("status", "true");
-        jsonObject.put("description", "update successfully");
-        jsonArray.add(jsonObject);
+            jsonObject2.put("status", jsonArray);
 
-        jsonObject2.put("status", jsonArray);
-
-        //return ResponseEntity.noContent().build();
-        return jsonObject2.toString();
+            return jsonObject.toString();
+        }
     }
 
     //create

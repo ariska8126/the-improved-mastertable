@@ -55,8 +55,8 @@ public class AttendanceStatusController {
 
         for (AttendanceStatus as : attendanceStatus) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", as.getAttendanceStatusId());
-            jsonObject.put("name", as.getAttendanceStatusName());
+            jsonObject.put("attendance_status_id", as.getAttendanceStatusId());
+            jsonObject.put("attendance_status_name", as.getAttendanceStatusName());
             jsonArray.add(jsonObject);
         }
 
@@ -77,8 +77,8 @@ public class AttendanceStatusController {
 
         for (AttendanceStatus as : attendanceStatus) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", as.getAttendanceStatusId());
-            jsonObject.put("name", as.getAttendanceStatusName());
+            jsonObject.put("attendance_status_id", as.getAttendanceStatusId());
+            jsonObject.put("attendance_status_name", as.getAttendanceStatusName());
             jsonArray.add(jsonObject);
         }
 
@@ -107,8 +107,8 @@ public class AttendanceStatusController {
             return jsonObject.toString();
         }
 
-        jsonObject.put("id", attendanceStatusOptional.get().getAttendanceStatusId());
-        jsonObject.put("name", attendanceStatusOptional.get().getAttendanceStatusName());
+        jsonObject.put("attendance_status_id", attendanceStatusOptional.get().getAttendanceStatusId());
+        jsonObject.put("attendance_status_name", attendanceStatusOptional.get().getAttendanceStatusName());
         jsonArray.add(jsonObject);
 
         jsonObject2.put("attendance_status", jsonArray);
@@ -120,26 +120,40 @@ public class AttendanceStatusController {
     @PutMapping("/update/{id}")
     @ApiOperation(value = "${AttendanceStatusController.update}")
     public String updateAttendanceStatus(@RequestBody AttendanceStatus attendanceStatus, @PathVariable int id) {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject2 = new JSONObject();
+        
         Optional<AttendanceStatus> attendanceStatusOptional = attendanceStatusRepository.findById(id);
         if (!attendanceStatusOptional.isPresent()) {
             return "fail";
         }
-
+        
+        String name = attendanceStatusOptional.get().getAttendanceStatusName();
+        String active = attendanceStatusOptional.get().getAttendanceStatusActive();
+        
         attendanceStatus.setAttendanceStatusId(id);
         attendanceStatusRepository.save(attendanceStatus);
+        
+        String nameUpdate = attendanceStatusOptional.get().getAttendanceStatusName();
+        String activeUpdate = attendanceStatusOptional.get().getAttendanceStatusActive();
+        
+        if (name.equals(nameUpdate) && active.equals(activeUpdate)) {
+            jsonObject.put("status", "true");
+            jsonObject.put("description", "there is no data udated");
+            jsonArray.add(jsonObject);
+            jsonObject2.put("status", jsonArray);
 
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject = new JSONObject();
-        JSONObject jsonObject2 = new JSONObject();
+            return jsonObject.toString();
+        } else {
+            jsonObject.put("status", "true");
+            jsonObject.put("description", "update successfully");
+            jsonArray.add(jsonObject);
 
-        jsonObject.put("status", "true");
-        jsonObject.put("description", "update successfully");
-        jsonArray.add(jsonObject);
+            jsonObject2.put("status", jsonArray);
 
-        jsonObject2.put("status", jsonArray);
-
-        //return ResponseEntity.noContent().build();
-        return jsonObject.toString();
+            return jsonObject.toString();
+        }
     }
     
      // CREATE

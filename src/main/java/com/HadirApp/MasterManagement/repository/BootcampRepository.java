@@ -6,7 +6,6 @@
 package com.HadirApp.MasterManagement.repository;
 
 import com.HadirApp.MasterManagement.entity.Bootcamp;
-import com.HadirApp.MasterManagement.entity.BootcampLocation;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
