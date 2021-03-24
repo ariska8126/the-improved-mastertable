@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author creative
  */
 @Entity
-@Table(name = "users")
+@Table(name = "users", catalog = "hadir_db", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
@@ -92,6 +92,22 @@ public class Users implements Serializable {
     public Users(String userId) {
         this.userId = userId;
     }
+    
+    //add new user 
+
+    public Users(String userId, String userFullname, String userEmail, String userPassword, String userActive, String userUnixcodeValue, Date userUnixcodeDate, String userPhoto, Role roleId, Division divisionId) {
+        this.userId = userId;
+        this.userFullname = userFullname;
+        this.userEmail = userEmail;
+        this.userPassword = userPassword;
+        this.userActive = userActive;
+        this.userUnixcodeValue = userUnixcodeValue;
+        this.userUnixcodeDate = userUnixcodeDate;
+        this.userPhoto = userPhoto;
+        this.roleId = roleId;
+        this.divisionId = divisionId;
+    }
+    
 
     public Users(String userId, String userFullname, String userEmail, String userPassword, String userActive, String userUnixcodeValue, Date userUnixcodeDate, String userPhoto) {
         this.userId = userId;

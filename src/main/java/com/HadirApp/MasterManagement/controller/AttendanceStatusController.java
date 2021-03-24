@@ -55,8 +55,8 @@ public class AttendanceStatusController {
 
         for (AttendanceStatus as : attendanceStatus) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", as.getAttendanceStatusId());
-            jsonObject.put("name", as.getAttendanceStatusName());
+            jsonObject.put("id_attendancestatus", as.getAttendanceStatusId());
+            jsonObject.put("name_attendancestatus", as.getAttendanceStatusName());
             jsonArray.add(jsonObject);
         }
 
@@ -77,8 +77,8 @@ public class AttendanceStatusController {
 
         for (AttendanceStatus as : attendanceStatus) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", as.getAttendanceStatusId());
-            jsonObject.put("name", as.getAttendanceStatusName());
+            jsonObject.put("id_attendancestatus", as.getAttendanceStatusId());
+            jsonObject.put("name_attendancestatus", as.getAttendanceStatusName());
             jsonArray.add(jsonObject);
         }
 
@@ -107,8 +107,8 @@ public class AttendanceStatusController {
             return jsonObject.toString();
         }
 
-        jsonObject.put("id", attendanceStatusOptional.get().getAttendanceStatusId());
-        jsonObject.put("name", attendanceStatusOptional.get().getAttendanceStatusName());
+        jsonObject.put("id_attendancestatus", attendanceStatusOptional.get().getAttendanceStatusId());
+        jsonObject.put("name_attendancestatus", attendanceStatusOptional.get().getAttendanceStatusName());
         jsonArray.add(jsonObject);
 
         jsonObject2.put("attendance_status", jsonArray);
