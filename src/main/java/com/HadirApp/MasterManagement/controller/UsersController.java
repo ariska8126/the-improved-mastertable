@@ -11,7 +11,6 @@ import com.HadirApp.MasterManagement.entity.Users;
 import com.HadirApp.MasterManagement.repository.UsersRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  */
 @RestController
 @RequestMapping("/api/master/users")
-@Api(tags = "UserManagement")
+@Api(tags = "User Management")
 public class UsersController {
 
     @Autowired
@@ -45,13 +44,39 @@ public class UsersController {
     @ApiOperation(value = "${UsersController.getuser}")
     public String getAllUser() {
         List<Users> users = repository.findAll();
-
         JSONArray jSONArray = new JSONArray();
         JSONObject jSONObject = new JSONObject();
-
         for (Users u : users) {
             JSONObject jSONObject1 = new JSONObject();
+            jSONObject1.put("id", u.getUserId());
+            jSONObject1.put("username", u.getUserFullname());
+            jSONObject1.put("email", u.getUserEmail());
+            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleName", u.getRoleId().getRoleName());
+            jSONObject1.put("activeStatus", u.getUserActive());
+            jSONArray.add(jSONObject1);
+        }
+        jSONObject.put("users", jSONArray);
+        return jSONObject.toString();
+    }
 
+    @GetMapping("/getallemployee")
+    @ApiOperation(value = "${UsersController.getallemployee}")
+    public String getAllEmployee() {
+
+        String role = "employee";
+
+        JSONArray jsona = new JSONArray();
+        JSONObject jsono = new JSONObject();
+
+        List<Users> employee = repository.getUsersByRole(role);
+        System.out.println("test get user");
+
+        for (Users u : employee) {
+
+            JSONObject jSONObject1 = new JSONObject();
             jSONObject1.put("id", u.getUserId());
             jSONObject1.put("username", u.getUserFullname());
             jSONObject1.put("email", u.getUserEmail());
@@ -61,12 +86,135 @@ public class UsersController {
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("activeStatus", u.getUserActive());
 
-            jSONArray.add(jSONObject1);
+            jsona.add(jSONObject1);
         }
+        jsono.put("users", jsona);
 
-        jSONObject.put("users", jSONArray);
-        return jSONObject.toString();
+        return jsono.toString();
+    }
 
+    @GetMapping("/getalltrainer")
+    @ApiOperation(value = "${UsersController.getalltrainer}")
+    public String getAllTrainer() {
+
+        String role = "trainer";
+
+        JSONArray jsona = new JSONArray();
+        JSONObject jsono = new JSONObject();
+
+        List<Users> employee = repository.getUsersByRole(role);
+        System.out.println("test get trainer");
+
+        for (Users u : employee) {
+
+            JSONObject jSONObject1 = new JSONObject();
+            jSONObject1.put("id", u.getUserId());
+            jSONObject1.put("username", u.getUserFullname());
+            jSONObject1.put("email", u.getUserEmail());
+            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleName", u.getRoleId().getRoleName());
+            jSONObject1.put("activeStatus", u.getUserActive());
+
+            jsona.add(jSONObject1);
+        }
+        jsono.put("users", jsona);
+
+        return jsono.toString();
+    }
+
+    @GetMapping("/getallmanageractive")
+    @ApiOperation(value = "${UsersController.getallmanagera}")
+    public String getAllManagerActive() {
+
+        String role = "manager active";
+
+        JSONArray jsona = new JSONArray();
+        JSONObject jsono = new JSONObject();
+
+        List<Users> employee = repository.getUsersByRole(role);
+        System.out.println("test get user");
+
+        for (Users u : employee) {
+
+            JSONObject jSONObject1 = new JSONObject();
+            jSONObject1.put("id", u.getUserId());
+            jSONObject1.put("username", u.getUserFullname());
+            jSONObject1.put("email", u.getUserEmail());
+            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleName", u.getRoleId().getRoleName());
+            jSONObject1.put("activeStatus", u.getUserActive());
+
+            jsona.add(jSONObject1);
+        }
+        jsono.put("users", jsona);
+
+        return jsono.toString();
+    }
+
+    @GetMapping("/getallmanagerpassive")
+    @ApiOperation(value = "${UsersController.getallmanagerp}")
+    public String getAllManagerPassive() {
+
+        String role = "manager passive";
+
+        JSONArray jsona = new JSONArray();
+        JSONObject jsono = new JSONObject();
+
+        List<Users> employee = repository.getUsersByRole(role);
+        System.out.println("test get user");
+
+        for (Users u : employee) {
+
+            JSONObject jSONObject1 = new JSONObject();
+            jSONObject1.put("id", u.getUserId());
+            jSONObject1.put("username", u.getUserFullname());
+            jSONObject1.put("email", u.getUserEmail());
+            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleName", u.getRoleId().getRoleName());
+            jSONObject1.put("activeStatus", u.getUserActive());
+
+            jsona.add(jSONObject1);
+        }
+        jsono.put("users", jsona);
+
+        return jsono.toString();
+    }
+
+    @GetMapping("/getalladmin")
+    @ApiOperation(value = "${UsersController.getalladmin}")
+    public String getAllAdmin() {
+
+        String role = "admin";
+
+        JSONArray jsona = new JSONArray();
+        JSONObject jsono = new JSONObject();
+
+        List<Users> employee = repository.getUsersByRole(role);
+        System.out.println("test get user");
+
+        for (Users u : employee) {
+
+            JSONObject jSONObject1 = new JSONObject();
+            jSONObject1.put("id", u.getUserId());
+            jSONObject1.put("username", u.getUserFullname());
+            jSONObject1.put("email", u.getUserEmail());
+            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleName", u.getRoleId().getRoleName());
+            jSONObject1.put("activeStatus", u.getUserActive());
+
+            jsona.add(jSONObject1);
+        }
+        jsono.put("users", jsona);
+
+        return jsono.toString();
     }
 
     @GetMapping("/getusersactive")
@@ -126,22 +274,34 @@ public class UsersController {
     @ApiOperation(value = "${UsersController.updatebyid}")
     public String updateUser(@RequestBody Map<String, ?> input, @PathVariable String id) {
 
-//        Optional<Users> user = repository.getUsersByID(id);
+        Iterable<Users> userlist = repository.getUsersListByID(id);
+        System.out.println("user: "+userlist);
         Users user = repository.getEntityUsersByID(id);
+        
         if (user == null) {
-            System.out.println("user not found");
+            JSONArray jsona = new JSONArray();
+            JSONObject jSONObject = new JSONObject();
+            JSONObject jSONObject1 = new JSONObject();
+
+            jSONObject1.put("status", "false");
+            jSONObject1.put("description", "update unsuccessfully, userId not found");
+            jsona.add(jSONObject1);
+
+            jSONObject.put("status", jsona);
+
+            return jSONObject.toString();
         }
 
         String userFullname = (String) input.get("userFullname");
         String userEmail = (String) input.get("userEmail");
         String userActive = (String) input.get("userActive");
         String userPhoto = (String) input.get("userPhoto");
-        
+
         String role = (String) input.get("roleId");
         String division = (String) input.get("divisionId");
         int roleId = Integer.parseInt(role);
         int divisionId = Integer.parseInt(division);
-        
+
         user.setUserFullname(userFullname);
         user.setUserEmail(userEmail);
         user.setUserActive(userActive);
@@ -149,10 +309,9 @@ public class UsersController {
         user.setRoleId(new Role(roleId));
         user.setDivisionId(new Division(divisionId));
         repository.save(user);
-        
+
         System.out.println("update berhasil");
-                
-        
+
         JSONArray jsona = new JSONArray();
         JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
@@ -177,7 +336,22 @@ public class UsersController {
         String userEmail = (String) input.get("userEmail");
         String userActive = (String) input.get("userActive");
         String userPhoto = (String) input.get("userPhoto");
-        
+
+        int emailexist = repository.findIfExistEmail(userEmail);
+        if (emailexist == 1) {
+            JSONArray jsona = new JSONArray();
+            JSONObject jSONObject = new JSONObject();
+            JSONObject jSONObject1 = new JSONObject();
+
+            jSONObject1.put("status", "false");
+            jSONObject1.put("description", "insert unsuccessfully, email already exist");
+            jsona.add(jSONObject1);
+
+            jSONObject.put("status", jsona);
+
+            return jSONObject.toString();
+        }
+
         String role = (String) input.get("roleId");
         String division = (String) input.get("divisionId");
         int roleId = Integer.parseInt(role);
@@ -203,9 +377,9 @@ public class UsersController {
         dummyuserUnixcodeValue = dummyuserUnixcodeValue.substring(0, 6);
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
-        
+
         String encodePassword = encoder.encode(dummyPassword);
-        
+
         String userId = newID; //set user id
         String userPassword = encodePassword; //set user password
         String userUnixcodeValue = dummyuserUnixcodeValue; //set user unicodevalue
@@ -214,38 +388,81 @@ public class UsersController {
         Users users = new Users(userId, userFullname, userEmail, userPassword,
                 userActive, userUnixcodeValue, userUnixcodeDate, userPhoto,
                 new Role(roleId), new Division(divisionId));
-        
+
         repository.save(users);
         System.out.println("new user saved");
-        return "test";
+
+        JSONArray jsona = new JSONArray();
+        JSONObject jSONObject = new JSONObject();
+        JSONObject jSONObject1 = new JSONObject();
+
+        jSONObject1.put("status", "true");
+        jSONObject1.put("description", "insert successfully");
+        jsona.add(jSONObject1);
+
+        jSONObject.put("status", jsona);
+
+        return jSONObject.toString();
     }
-    
+
     @PutMapping("/changepassword/{id}")
-    @ApiOperation(value="${UsersController.changepassword}")
-    public String changePassword(@PathVariable String id, @RequestBody Map<String, ?> input){
-        
+    @ApiOperation(value = "${UsersController.changepassword}")
+    public String changePassword(@PathVariable String id, @RequestBody Map<String, ?> input) {
+
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
-        
+
         String oldPassword = (String) input.get("oldPassword");
         String newPassword = (String) input.get("newPassword");
-        
+
         Users user = repository.getEntityUsersByID(id);
-        if(user == null ){
-            return "user not found";
+        if (user == null) {
+            JSONArray jsona = new JSONArray();
+            JSONObject jSONObject = new JSONObject();
+            JSONObject jSONObject1 = new JSONObject();
+
+            jSONObject1.put("status", "false");
+            jSONObject1.put("description", "update unsuccessfully, user not found");
+            jsona.add(jSONObject1);
+
+            jSONObject.put("status", jsona);
+
+            return jSONObject.toString();
         }
-        
+
         String activePassword = user.getUserPassword();
-        
+
         boolean a = encoder.matches(oldPassword, activePassword);
-        System.out.println("matches password: "+a);
-        
-        if(a){
+        System.out.println("matches password: " + a);
+
+        if (a) {
             newPassword = encoder.encode(newPassword);
             user.setUserPassword(newPassword);
             repository.save(user);
-            return "change password success";
+//            return "change password success";
+            JSONArray jsona = new JSONArray();
+            JSONObject jSONObject = new JSONObject();
+            JSONObject jSONObject1 = new JSONObject();
+
+            jSONObject1.put("status", "true");
+            jSONObject1.put("description", "update successfully");
+            jsona.add(jSONObject1);
+
+            jSONObject.put("status", jsona);
+
+            return jSONObject.toString();
         }
-        return "change failed";
+        JSONArray jsona = new JSONArray();
+        JSONObject jSONObject = new JSONObject();
+        JSONObject jSONObject1 = new JSONObject();
+
+        jSONObject1.put("status", "false");
+        jSONObject1.put("description", "update unsuccessfully, your old password is invalid");
+        jsona.add(jSONObject1);
+
+        jSONObject.put("status", jsona);
+
+        return jSONObject.toString();
+//        return "change failed";
     }
 
     static String getAlphaNumericString(int n) {
