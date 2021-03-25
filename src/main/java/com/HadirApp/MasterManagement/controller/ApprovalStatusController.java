@@ -31,7 +31,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/api/master/approvalstatus")
-@Api(tags = "ApprovalStatusManagement")
+@Api(tags = "Approval Status Management")
 public class ApprovalStatusController {
 
     @Autowired
@@ -54,8 +54,8 @@ public class ApprovalStatusController {
 
         for (ApprovalStatus a : ap) {
             JSONObject jSONObject = new JSONObject();
-            jSONObject.put("approval_status_id", a.getApprovalStatusId());
-            jSONObject.put("approval_status_name", a.getApprovalStatusName());
+            jSONObject.put("approvalStatusId", a.getApprovalStatusId());
+            jSONObject.put("approvalStatusActive", a.getApprovalStatusName());
             jSONArray.add(jSONObject);
         }
         j.put("approvalstatus_list", jSONArray);
@@ -70,18 +70,18 @@ public class ApprovalStatusController {
 
         Optional<ApprovalStatus> app = repository.findById(id);
         if (!app.isPresent()) {
-            System.out.println("role not found");
+            System.out.println("approval status not found");
         }
 
         JSONArray jSONArray = new JSONArray();
         JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
-        jSONObject.put("approval_status_id", app.get().getApprovalStatusId());
-        jSONObject.put("approval_status_name", app.get().getApprovalStatusName());
+        jSONObject.put("approvalStatusId", app.get().getApprovalStatusId());
+        jSONObject.put("approvalStatusName", app.get().getApprovalStatusName());
         jSONArray.add(jSONObject);
 
-        jSONObject1.put("approvalstatus", jSONArray);
+        jSONObject1.put("approvalStatusList", jSONArray);
 
         return jSONObject1.toString();
 
@@ -170,11 +170,11 @@ public class ApprovalStatusController {
 
         for (ApprovalStatus a : app) {
             JSONObject jSONObject = new JSONObject();
-            jSONObject.put("id", a.getApprovalStatusId());
-            jSONObject.put("name", a.getApprovalStatusName());
+            jSONObject.put("approvalStatusId", a.getApprovalStatusId());
+            jSONObject.put("approvalStatusName", a.getApprovalStatusName());
             jSONArray.add(jSONObject);
         }
-        j.put("approvalstatus_list", jSONArray);
+        j.put("approvalStatusList", jSONArray);
 
         return j.toString();
     }

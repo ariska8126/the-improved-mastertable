@@ -48,17 +48,17 @@ public class UsersController {
         JSONObject jSONObject = new JSONObject();
         for (Users u : users) {
             JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("id", u.getUserId());
-            jSONObject1.put("username", u.getUserFullname());
-            jSONObject1.put("email", u.getUserEmail());
+            jSONObject1.put("userId", u.getUserId());
+            jSONObject1.put("userFullname", u.getUserFullname());
+            jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
             jSONObject1.put("roleID", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("activeStatus", u.getUserActive());
+            jSONObject1.put("userActive", u.getUserActive());
             jSONArray.add(jSONObject1);
         }
-        jSONObject.put("users", jSONArray);
+        jSONObject.put("userList", jSONArray);
         return jSONObject.toString();
     }
 
@@ -72,23 +72,22 @@ public class UsersController {
         JSONObject jsono = new JSONObject();
 
         List<Users> employee = repository.getUsersByRole(role);
-        System.out.println("test get user");
 
         for (Users u : employee) {
 
             JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("id", u.getUserId());
-            jSONObject1.put("username", u.getUserFullname());
-            jSONObject1.put("email", u.getUserEmail());
+            jSONObject1.put("userId", u.getUserId());
+            jSONObject1.put("userFullname", u.getUserFullname());
+            jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
             jSONObject1.put("roleID", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("activeStatus", u.getUserActive());
+            jSONObject1.put("userActive", u.getUserActive());
 
             jsona.add(jSONObject1);
         }
-        jsono.put("users", jsona);
+        jsono.put("EmployeeList", jsona);
 
         return jsono.toString();
     }
@@ -108,18 +107,18 @@ public class UsersController {
         for (Users u : employee) {
 
             JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("id", u.getUserId());
-            jSONObject1.put("username", u.getUserFullname());
-            jSONObject1.put("email", u.getUserEmail());
+            jSONObject1.put("userId", u.getUserId());
+            jSONObject1.put("userFullname", u.getUserFullname());
+            jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
             jSONObject1.put("roleID", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("activeStatus", u.getUserActive());
+            jSONObject1.put("userActive", u.getUserActive());
 
             jsona.add(jSONObject1);
         }
-        jsono.put("users", jsona);
+        jsono.put("trainnerList", jsona);
 
         return jsono.toString();
     }
@@ -139,18 +138,18 @@ public class UsersController {
         for (Users u : employee) {
 
             JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("id", u.getUserId());
-            jSONObject1.put("username", u.getUserFullname());
-            jSONObject1.put("email", u.getUserEmail());
+            jSONObject1.put("userId", u.getUserId());
+            jSONObject1.put("userFullname", u.getUserFullname());
+            jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
             jSONObject1.put("roleID", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("activeStatus", u.getUserActive());
+            jSONObject1.put("userActive", u.getUserActive());
 
             jsona.add(jSONObject1);
         }
-        jsono.put("users", jsona);
+        jsono.put("managerActiveList", jsona);
 
         return jsono.toString();
     }
@@ -170,18 +169,18 @@ public class UsersController {
         for (Users u : employee) {
 
             JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("id", u.getUserId());
-            jSONObject1.put("username", u.getUserFullname());
-            jSONObject1.put("email", u.getUserEmail());
+            jSONObject1.put("userId", u.getUserId());
+            jSONObject1.put("userFullname", u.getUserFullname());
+            jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
             jSONObject1.put("roleID", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("activeStatus", u.getUserActive());
+            jSONObject1.put("userActive", u.getUserActive());
 
             jsona.add(jSONObject1);
         }
-        jsono.put("users", jsona);
+        jsono.put("managerPassiveList", jsona);
 
         return jsono.toString();
     }
@@ -201,18 +200,18 @@ public class UsersController {
         for (Users u : employee) {
 
             JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("id", u.getUserId());
-            jSONObject1.put("username", u.getUserFullname());
-            jSONObject1.put("email", u.getUserEmail());
+            jSONObject1.put("userId", u.getUserId());
+            jSONObject1.put("userFullname", u.getUserFullname());
+            jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
             jSONObject1.put("roleID", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("activeStatus", u.getUserActive());
+            jSONObject1.put("userActive", u.getUserActive());
 
             jsona.add(jSONObject1);
         }
-        jsono.put("users", jsona);
+        jsono.put("adminList", jsona);
 
         return jsono.toString();
     }
@@ -227,18 +226,18 @@ public class UsersController {
         for (Users u : users) {
 
             JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("id", u.getUserId());
-            jSONObject1.put("username", u.getUserFullname());
-            jSONObject1.put("email", u.getUserEmail());
+            jSONObject1.put("userId", u.getUserId());
+            jSONObject1.put("userFullname", u.getUserFullname());
+            jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
             jSONObject1.put("roleID", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("activeStatus", u.getUserActive());
+            jSONObject1.put("userActive", u.getUserActive());
 
             jsona.add(jSONObject1);
         }
-        jsono.put("users", jsona);
+        jsono.put("userActiveList", jsona);
 
         return jsono.toString();
     }
@@ -256,38 +255,38 @@ public class UsersController {
         JSONObject jsono = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
-        jSONObject1.put("id", users.get().getUserId());
-        jSONObject1.put("username", users.get().getUserFullname());
-        jSONObject1.put("email", users.get().getUserEmail());
-        jSONObject1.put("divisionID", users.get().getDivisionId().getDivisionId());
+        jSONObject1.put("userId", users.get().getUserId());
+        jSONObject1.put("userFullname", users.get().getUserFullname());
+        jSONObject1.put("userEmail", users.get().getUserEmail());
+        jSONObject1.put("divisionId", users.get().getDivisionId().getDivisionId());
         jSONObject1.put("divisionName", users.get().getDivisionId().getDivisionName());
-        jSONObject1.put("roleID", users.get().getRoleId().getRoleId());
+        jSONObject1.put("roleId", users.get().getRoleId().getRoleId());
         jSONObject1.put("roleName", users.get().getRoleId().getRoleName());
-        jSONObject1.put("activeStatus", users.get().getUserActive());
+        jSONObject1.put("userActive", users.get().getUserActive());
 
         jsona.add(jSONObject1);
-        jsono.put("users", jsona);
+        jsono.put("userList", jsona);
         return jsono.toString();
     }
 
     @PutMapping("/update/{id}")
     @ApiOperation(value = "${UsersController.updatebyid}")
     public String updateUser(@RequestBody Map<String, ?> input, @PathVariable String id) {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jSONObject = new JSONObject();
+        JSONObject jSONObject2 = new JSONObject();
 
         Iterable<Users> userlist = repository.getUsersListByID(id);
-        System.out.println("user: "+userlist);
+        System.out.println("user: " + userlist);
         Users user = repository.getEntityUsersByID(id);
-        
+
         if (user == null) {
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
-            JSONObject jSONObject1 = new JSONObject();
 
-            jSONObject1.put("status", "false");
-            jSONObject1.put("description", "update unsuccessfully, userId not found");
-            jsona.add(jSONObject1);
+            jSONObject.put("status", "false");
+            jSONObject.put("description", "update unsuccessfully, userId not found");
+            jsonArray.add(jSONObject);
 
-            jSONObject.put("status", jsona);
+            jSONObject2.put("status", jsonArray);
 
             return jSONObject.toString();
         }
@@ -312,15 +311,11 @@ public class UsersController {
 
         System.out.println("update berhasil");
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
-        JSONObject jSONObject1 = new JSONObject();
+        jSONObject.put("status", "true");
+        jSONObject.put("description", "update successfully");
+        jsonArray.add(jSONObject);
 
-        jSONObject1.put("status", "true");
-        jSONObject1.put("description", "update successfully");
-        jsona.add(jSONObject1);
-
-        jSONObject.put("status", jsona);
+        jSONObject2.put("status", jsonArray);
 
         return jSONObject.toString();
 
