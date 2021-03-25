@@ -334,17 +334,14 @@ public class UsersController {
 
         int emailexist = repository.findIfExistEmail(userEmail);
         if (emailexist == 1) {
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
+
             JSONObject jSONObject1 = new JSONObject();
+
 
             jSONObject1.put("status", "false");
             jSONObject1.put("description", "insert unsuccessfully, email already exist");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
 
         String role = (String) input.get("roleId");
@@ -387,17 +384,12 @@ public class UsersController {
         repository.save(users);
         System.out.println("new user saved");
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "true");
         jSONObject1.put("description", "insert successfully");
-        jsona.add(jSONObject1);
 
-        jSONObject.put("status", jsona);
-
-        return jSONObject.toString();
+        return jSONObject1.toString();
     }
 
     @PutMapping("/changepassword/{id}")
@@ -411,17 +403,12 @@ public class UsersController {
 
         Users user = repository.getEntityUsersByID(id);
         if (user == null) {
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "false");
             jSONObject1.put("description", "update unsuccessfully, user not found");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
 
         String activePassword = user.getUserPassword();
@@ -433,31 +420,20 @@ public class UsersController {
             newPassword = encoder.encode(newPassword);
             user.setUserPassword(newPassword);
             repository.save(user);
-//            return "change password success";
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
+
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "true");
             jSONObject1.put("description", "update successfully");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "false");
         jSONObject1.put("description", "update unsuccessfully, your old password is invalid");
-        jsona.add(jSONObject1);
 
-        jSONObject.put("status", jsona);
-
-        return jSONObject.toString();
-//        return "change failed";
+        return jSONObject1.toString();
     }
 
     static String getAlphaNumericString(int n) {
