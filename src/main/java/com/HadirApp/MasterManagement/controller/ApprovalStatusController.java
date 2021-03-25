@@ -88,7 +88,7 @@ public class ApprovalStatusController {
     }
 
     //update
-    @PutMapping("update{id}")
+    @PutMapping("/updateapprovalstatus/{id}")
     @ApiOperation(value = "${ApprovalStatusController.update}")
     public String updateApprovalStatus(@RequestBody ApprovalStatus appstatus, @PathVariable int id) {
 
@@ -125,7 +125,7 @@ public class ApprovalStatusController {
     }
 
     //create
-    @PostMapping("/insert")
+    @PostMapping("/insertapprovalstatus")
     @ApiOperation(value = "${ApprovalStatusController.insert}")
     public String insertApprovalStatus(@RequestBody ApprovalStatus approvalStatus) {
         int beforeInsert = maxApprovalStatus();
