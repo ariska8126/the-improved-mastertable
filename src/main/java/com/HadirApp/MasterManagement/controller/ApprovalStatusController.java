@@ -31,7 +31,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/api/master/approvalstatus")
-@Api(tags = "ApprovalStatusManagement")
+@Api(tags = "Approval Status Management")
 public class ApprovalStatusController {
 
     @Autowired
