@@ -29,7 +29,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  * @author creative
  */
 @RestController
-@RequestMapping("/api/master/attendance")
+@RequestMapping("/api/master/attendancestatus")
 @Api(tags = "Attendance Status Managemet")
 public class AttendanceStatusController {
     

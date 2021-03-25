@@ -58,7 +58,7 @@ public class ApprovalStatusController {
             jSONObject.put("approvalStatusActive", a.getApprovalStatusName());
             jSONArray.add(jSONObject);
         }
-        j.put("approvalstatus_list", jSONArray);
+        j.put("approvalStatusList", jSONArray);
 
         return j.toString();
     }
@@ -81,7 +81,7 @@ public class ApprovalStatusController {
         jSONObject.put("approvalStatusName", app.get().getApprovalStatusName());
         jSONArray.add(jSONObject);
 
-        jSONObject1.put("approvalStatusList", jSONArray);
+        jSONObject1.put("approvalStatus", jSONArray);
 
         return jSONObject1.toString();
 
