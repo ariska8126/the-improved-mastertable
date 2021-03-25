@@ -57,12 +57,12 @@ public class RoleController {
 
         for (Role roles : role) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("role_id", roles.getRoleId());
-            jsonObject.put("role_name", roles.getRoleName());
+            jsonObject.put("roleId", roles.getRoleId());
+            jsonObject.put("roleName", roles.getRoleName());
             jsonArray.add(jsonObject);
         }
 
-        jsonObject2.put("role_list", jsonArray);
+        jsonObject2.put("roleList", jsonArray);
 
         return jsonObject2.toString();
     }
@@ -79,12 +79,12 @@ public class RoleController {
 
         for (Role roles : role) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("role_id", roles.getRoleId());
-            jsonObject.put("role_name", roles.getRoleName());
+            jsonObject.put("roleId", roles.getRoleId());
+            jsonObject.put("roleName", roles.getRoleName());
             jsonArray.add(jsonObject);
         }
 
-        jsonObject2.put("role_list", jsonArray);
+        jsonObject2.put("roleList", jsonArray);
 
         return jsonObject2.toString();
     }
@@ -102,8 +102,8 @@ public class RoleController {
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObject2 = new JSONObject();
 
-        jsonObject.put("role_id", role.get().getRoleId());
-        jsonObject.put("role_name", role.get().getRoleName());
+        jsonObject.put("roleId", role.get().getRoleId());
+        jsonObject.put("roleName", role.get().getRoleName());
         jsonArray.add(jsonObject);
 
         jsonObject2.put("role", jsonArray);

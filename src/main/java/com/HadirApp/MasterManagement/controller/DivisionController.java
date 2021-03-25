@@ -30,7 +30,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/api/master/division")
-@Api(tags = "DivisionManagement")
+@Api(tags = "Division Management")
 public class DivisionController {
 
     @Autowired
@@ -54,8 +54,8 @@ public class DivisionController {
 
         for (Division div : division) {
             JSONObject jSONObject = new JSONObject();
-            jSONObject.put("id_division", div.getDivisionId());
-            jSONObject.put("name_division", div.getDivisionName());
+            jSONObject.put("divisionId", div.getDivisionId());
+            jSONObject.put("divisionName", div.getDivisionName());
             jSONArray.add(jSONObject);
         }
         j.put("division_list", jSONArray);
@@ -75,12 +75,12 @@ public class DivisionController {
         for (Division div : division) {
             JSONObject jSONObject = new JSONObject();
 
-            jSONObject.put("division_id", div.getDivisionId());
-            jSONObject.put("division_name", div.getDivisionName());
+            jSONObject.put("divisionId", div.getDivisionId());
+            jSONObject.put("divisionName", div.getDivisionName());
 
             jSONArray.add(jSONObject);
         }
-        j.put("division_list", jSONArray);
+        j.put("divisionList", jSONArray);
 
         return j.toString();
     }
@@ -92,96 +92,90 @@ public class DivisionController {
 
         Optional<Division> division = repository.findById(id);
         if (!division.isPresent()) {
-            System.out.println("role not found");
+            System.out.println("division not found");
         }
 
         JSONArray jSONArray = new JSONArray();
         JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
-
-        jSONObject.put("division_id", division.get().getDivisionId());
-        jSONObject.put("division_name", division.get().getDivisionName());
+        jSONObject.put("divisionId", division.get().getDivisionId());
+        jSONObject.put("divisionName", division.get().getDivisionName());
 
         jSONArray.add(jSONObject);
-        
+
         jSONObject1.put("division", jSONArray);
 
         return jSONObject1.toString();
 
     }
-    
+
     //update
     @PutMapping("/update/{id}")
-    @ApiOperation(value="DivisionController.update")
-    public String updateDivision(@RequestBody Division division, @PathVariable int id){
+    @ApiOperation(value = "DivisionController.update")
+    public String updateDivision(@RequestBody Division division, @PathVariable int id) {
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObject2 = new JSONObject();
         Optional<Division> divOptional = repository.findById(id);
-        
-        if(!divOptional.isPresent()){
-            return "fail";
+
+        if (!divOptional.isPresent()) {
+            jsonObject.put("status", "false");
+            jsonObject.put("description", "update unsuccessfully, division not found");
+
+            return jsonObject.toString();
         }
-        
+
         String name = divOptional.get().getDivisionName();
         String active = divOptional.get().getDivisionActive();
-        
+
         division.setDivisionId(id);
         repository.save(division);
-        
+
         String nameUpdate = divOptional.get().getDivisionName();
         String activeUpdate = divOptional.get().getDivisionActive();
-        
+
         if (name.equals(nameUpdate) && active.equals(activeUpdate)) {
             jsonObject.put("status", "true");
             jsonObject.put("description", "there is no data udated");
-            jsonArray.add(jsonObject);
-            jsonObject2.put("status", jsonArray);
 
             return jsonObject.toString();
         } else {
             jsonObject.put("status", "true");
             jsonObject.put("description", "update successfully");
-            jsonArray.add(jsonObject);
-
-            jsonObject2.put("status", jsonArray);
 
             return jsonObject.toString();
         }
     }
-    
+
     //create
     @PostMapping("/insert")
-    @ApiOperation(value="${DivisionController.insert}")
-    public String insertDivision(@RequestBody Division division){
+    @ApiOperation(value = "${DivisionController.insert}")
+    public String insertDivision(@RequestBody Division division) {
         int beforeInsert = maxDivision();
         Division saveDivision = repository.save(division);
-        
+
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}")
                 .buildAndExpand(saveDivision.getDivisionId()).toUri();
         int afterInsert = maxDivision();
-        
-        
+
         JSONArray jSONArray = new JSONArray();
         JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
-        
-        if(afterInsert > beforeInsert){
+
+        if (afterInsert > beforeInsert) {
             jSONObject.put("status", "true");
             jSONObject.put("description", "insert successfully");
-            jSONArray.add(jSONObject);
             
-        }else{
+
+        } else {
             jSONObject.put("status", "false");
             jSONObject.put("description", "insert unsuccessfully");
-            jSONArray.add(jSONObject);
+            
         }
-        
-        jSONObject1.put("status", jSONArray);
-        
-        return jSONObject1.toString();
+
+
+        return jSONObject.toString();
     }
-    
 
 }

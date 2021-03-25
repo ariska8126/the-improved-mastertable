@@ -31,7 +31,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/api/master/approvalstatus")
-@Api(tags = "ApprovalStatusManagement")
+@Api(tags = "Approval Status Management")
 public class ApprovalStatusController {
 
     @Autowired
@@ -54,11 +54,11 @@ public class ApprovalStatusController {
 
         for (ApprovalStatus a : ap) {
             JSONObject jSONObject = new JSONObject();
-            jSONObject.put("approval_status_id", a.getApprovalStatusId());
-            jSONObject.put("approval_status_name", a.getApprovalStatusName());
+            jSONObject.put("approvalStatusId", a.getApprovalStatusId());
+            jSONObject.put("approvalStatusActive", a.getApprovalStatusName());
             jSONArray.add(jSONObject);
         }
-        j.put("approvalstatus_list", jSONArray);
+        j.put("approvalStatusList", jSONArray);
 
         return j.toString();
     }
@@ -70,65 +70,62 @@ public class ApprovalStatusController {
 
         Optional<ApprovalStatus> app = repository.findById(id);
         if (!app.isPresent()) {
-            System.out.println("role not found");
+            System.out.println("approval status not found");
         }
 
         JSONArray jSONArray = new JSONArray();
         JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
-        jSONObject.put("approval_status_id", app.get().getApprovalStatusId());
-        jSONObject.put("approval_status_name", app.get().getApprovalStatusName());
+        jSONObject.put("approvalStatusId", app.get().getApprovalStatusId());
+        jSONObject.put("approvalStatusName", app.get().getApprovalStatusName());
         jSONArray.add(jSONObject);
 
-        jSONObject1.put("approvalstatus", jSONArray);
+        jSONObject1.put("approvalStatus", jSONArray);
 
         return jSONObject1.toString();
 
     }
 
     //update
-    @PutMapping("update{id}")
+    @PutMapping("/updateapprovalstatus/{id}")
     @ApiOperation(value = "${ApprovalStatusController.update}")
     public String updateApprovalStatus(@RequestBody ApprovalStatus appstatus, @PathVariable int id) {
-        JSONArray jsonArray = new JSONArray();
+
         JSONObject jsonObject = new JSONObject();
-        JSONObject jsonObject2 = new JSONObject();
-        
+
         Optional<ApprovalStatus> appOptional = repository.findById(id);
 
         if (!appOptional.isPresent()) {
-            return "fail";
+            jsonObject.put("status", "false");
+            jsonObject.put("description", "update successfully, ID Not Found");
+
+            return jsonObject.toString();
         }
         String name = appOptional.get().getApprovalStatusName();
         String active = appOptional.get().getApprovalStatusName();
-        
+
         appstatus.setApprovalStatusId(id);
         repository.save(appstatus);
-        
+
         String nameUpdate = appOptional.get().getApprovalStatusName();
         String activeUpdate = appOptional.get().getApprovalStatusName();
-        
+
         if (name.equals(nameUpdate) && active.equals(activeUpdate)) {
             jsonObject.put("status", "true");
             jsonObject.put("description", "there is no data udated");
-            jsonArray.add(jsonObject);
-            jsonObject2.put("status", jsonArray);
 
             return jsonObject.toString();
         } else {
             jsonObject.put("status", "true");
             jsonObject.put("description", "update successfully");
-            jsonArray.add(jsonObject);
-
-            jsonObject2.put("status", jsonArray);
 
             return jsonObject.toString();
         }
     }
 
     //create
-    @PostMapping("/insert")
+    @PostMapping("/insertapprovalstatus")
     @ApiOperation(value = "${ApprovalStatusController.insert}")
     public String insertApprovalStatus(@RequestBody ApprovalStatus approvalStatus) {
         int beforeInsert = maxApprovalStatus();
@@ -138,24 +135,19 @@ public class ApprovalStatusController {
                 .buildAndExpand(saveapprovalStatus.getApprovalStatusId()).toUri();
         int afterInsert = maxApprovalStatus();
 
-        JSONArray jSONArray = new JSONArray();
         JSONObject jSONObject = new JSONObject();
-        JSONObject jSONObject1 = new JSONObject();
 
         if (afterInsert > beforeInsert) {
             jSONObject.put("status", "true");
             jSONObject.put("description", "insert successfully");
-            jSONArray.add(jSONObject);
 
         } else {
             jSONObject.put("status", "false");
             jSONObject.put("description", "insert unsuccessfully");
-            jSONArray.add(jSONObject);
+
         }
 
-        jSONObject1.put("status", jSONArray);
-
-        return jSONObject1.toString();
+        return jSONObject.toString();
     }
 
     //read
@@ -170,11 +162,11 @@ public class ApprovalStatusController {
 
         for (ApprovalStatus a : app) {
             JSONObject jSONObject = new JSONObject();
-            jSONObject.put("id", a.getApprovalStatusId());
-            jSONObject.put("name", a.getApprovalStatusName());
+            jSONObject.put("approvalStatusId", a.getApprovalStatusId());
+            jSONObject.put("approvalStatusName", a.getApprovalStatusName());
             jSONArray.add(jSONObject);
         }
-        j.put("approvalstatus_list", jSONArray);
+        j.put("approvalStatusList", jSONArray);
 
         return j.toString();
     }
