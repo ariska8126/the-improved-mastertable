@@ -79,13 +79,13 @@ public class BootcampController {
 
         for (Bootcamp bl : bootcamp) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("bootcamp_id", bl.getBootcampId());
-            jsonObject.put("bootcamp_name", bl.getBootcampName());
-            jsonObject.put("bootcamp_location", bl.getBootcampLocation());
+            jsonObject.put("bootcampId", bl.getBootcampId());
+            jsonObject.put("bootcampName", bl.getBootcampName());
+            jsonObject.put("bootcampLocation", bl.getBootcampLocation());
             jsonArray.add(jsonObject);
         }
 
-        jsonObject2.put("bootcamp_list", jsonArray);
+        jsonObject2.put("bootcampList", jsonArray);
 
         return jsonObject2.toString();
     }
@@ -102,13 +102,13 @@ public class BootcampController {
 
         for (Bootcamp bl : bootcamp) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("bootcamp_id", bl.getBootcampId());
-            jsonObject.put("bootcamp_name", bl.getBootcampName());
-            jsonObject.put("bootcamp_location", bl.getBootcampLocation());
+            jsonObject.put("bootcampId", bl.getBootcampId());
+            jsonObject.put("bootcampName", bl.getBootcampName());
+            jsonObject.put("bootcampLocation", bl.getBootcampLocation());
             jsonArray.add(jsonObject);
         }
 
-        jsonObject2.put("bootcamp_list", jsonArray);
+        jsonObject2.put("bootcampList", jsonArray);
 
         return jsonObject2.toString();
     }
@@ -133,9 +133,9 @@ public class BootcampController {
             return jsonObject.toString();
         }
 
-        jsonObject.put("bootcamp_id", bootcamp.get().getBootcampId());
-        jsonObject.put("bootcamp_name", bootcamp.get().getBootcampName());
-        jsonObject.put("bootcamp_location", bootcamp.get().getBootcampLocation());
+        jsonObject.put("bootcampId", bootcamp.get().getBootcampId());
+        jsonObject.put("bootcampName", bootcamp.get().getBootcampName());
+        jsonObject.put("bootcampLocation", bootcamp.get().getBootcampLocation());
 
         jsonObject2.put("bootcamp", jsonArray);
 
