@@ -329,7 +329,7 @@ public class UsersController {
     @PostMapping("/insert")
     @ApiOperation(value = "${UsersController.insert}")
     public String insertNewUser(@RequestBody Map<String, ?> input) {
-
+        
         System.out.println("insert new user running");
 
         String userFullname = (String) input.get("userFullname");
