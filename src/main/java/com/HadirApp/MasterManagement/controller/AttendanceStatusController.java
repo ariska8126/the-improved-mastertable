@@ -55,12 +55,14 @@ public class AttendanceStatusController {
 
         for (AttendanceStatus as : attendanceStatus) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("attendance_status_id", as.getAttendanceStatusId());
-            jsonObject.put("attendance_status_name", as.getAttendanceStatusName());
+
+            jsonObject.put("attendanceStatusId", as.getAttendanceStatusId());
+            jsonObject.put("attendanceStatusName", as.getAttendanceStatusName());
+
             jsonArray.add(jsonObject);
         }
 
-        jsonObject2.put("attendance_status_list", jsonArray);
+        jsonObject2.put("attendanceStatusList", jsonArray);
 
         return jsonObject2.toString();
     }
@@ -77,12 +79,14 @@ public class AttendanceStatusController {
 
         for (AttendanceStatus as : attendanceStatus) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("attendance_status_id", as.getAttendanceStatusId());
-            jsonObject.put("attendance_status_name", as.getAttendanceStatusName());
+
+            jsonObject.put("attendanceStatusId", as.getAttendanceStatusId());
+            jsonObject.put("attendanceStatusName", as.getAttendanceStatusName());
+
             jsonArray.add(jsonObject);
         }
 
-        jsonObject2.put("attendance_status_list", jsonArray);
+        jsonObject2.put("attendanceStatusList", jsonArray);
 
         return jsonObject2.toString();
     }
@@ -102,16 +106,18 @@ public class AttendanceStatusController {
             jsonObject.put("status", "false");
             jsonArray.add(jsonObject);
 
-            jsonObject2.put("attendance_status", jsonArray);
+            jsonObject2.put("attendanceStatus", jsonArray);
 
             return jsonObject.toString();
         }
 
-        jsonObject.put("attendance_status_id", attendanceStatusOptional.get().getAttendanceStatusId());
-        jsonObject.put("attendance_status_name", attendanceStatusOptional.get().getAttendanceStatusName());
+
+        jsonObject.put("attendanceStatusId", attendanceStatusOptional.get().getAttendanceStatusId());
+        jsonObject.put("attendanceStatusName", attendanceStatusOptional.get().getAttendanceStatusName());
+
         jsonArray.add(jsonObject);
 
-        jsonObject2.put("attendance_status", jsonArray);
+        jsonObject2.put("attendanceStatus", jsonArray);
 
         return jsonObject.toString();
     }

@@ -30,7 +30,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @RestController
 @RequestMapping("/api/master/division")
-@Api(tags = "DivisionManagement")
+@Api(tags = "Division Management")
 public class DivisionController {
 
     @Autowired
@@ -54,8 +54,8 @@ public class DivisionController {
 
         for (Division div : division) {
             JSONObject jSONObject = new JSONObject();
-            jSONObject.put("id", div.getDivisionId());
-            jSONObject.put("name", div.getDivisionName());
+            jSONObject.put("divisionId", div.getDivisionId());
+            jSONObject.put("divisionName", div.getDivisionName());
             jSONArray.add(jSONObject);
         }
         j.put("division_list", jSONArray);
@@ -74,11 +74,13 @@ public class DivisionController {
 
         for (Division div : division) {
             JSONObject jSONObject = new JSONObject();
-            jSONObject.put("division_id", div.getDivisionId());
-            jSONObject.put("division_name", div.getDivisionName());
+
+            jSONObject.put("divisionId", div.getDivisionId());
+            jSONObject.put("divisionName", div.getDivisionName());
+
             jSONArray.add(jSONObject);
         }
-        j.put("division_list", jSONArray);
+        j.put("divisionList", jSONArray);
 
         return j.toString();
     }
@@ -90,15 +92,17 @@ public class DivisionController {
 
         Optional<Division> division = repository.findById(id);
         if (!division.isPresent()) {
-            System.out.println("role not found");
+            System.out.println("division not found");
         }
 
         JSONArray jSONArray = new JSONArray();
         JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
-        jSONObject.put("division_id", division.get().getDivisionId());
-        jSONObject.put("division_name", division.get().getDivisionName());
+
+        jSONObject.put("divisionId", division.get().getDivisionId());
+        jSONObject.put("divisionName", division.get().getDivisionName());
+
         jSONArray.add(jSONObject);
         
         jSONObject1.put("division", jSONArray);
@@ -108,7 +112,7 @@ public class DivisionController {
     }
     
     //update
-    @PutMapping("update{id}")
+    @PutMapping("/update/{id}")
     @ApiOperation(value="DivisionController.update")
     public String updateDivision(@RequestBody Division division, @PathVariable int id){
         JSONArray jsonArray = new JSONArray();
