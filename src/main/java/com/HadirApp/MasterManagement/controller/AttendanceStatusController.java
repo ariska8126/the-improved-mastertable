@@ -55,8 +55,10 @@ public class AttendanceStatusController {
 
         for (AttendanceStatus as : attendanceStatus) {
             JSONObject jsonObject = new JSONObject();
+
             jsonObject.put("attendance_status_id", as.getAttendanceStatusId());
             jsonObject.put("attendance_status_name", as.getAttendanceStatusName());
+
             jsonArray.add(jsonObject);
         }
 
@@ -77,8 +79,10 @@ public class AttendanceStatusController {
 
         for (AttendanceStatus as : attendanceStatus) {
             JSONObject jsonObject = new JSONObject();
+
             jsonObject.put("attendance_status_id", as.getAttendanceStatusId());
             jsonObject.put("attendance_status_name", as.getAttendanceStatusName());
+
             jsonArray.add(jsonObject);
         }
 
@@ -107,8 +111,10 @@ public class AttendanceStatusController {
             return jsonObject.toString();
         }
 
+
         jsonObject.put("attendance_status_id", attendanceStatusOptional.get().getAttendanceStatusId());
         jsonObject.put("attendance_status_name", attendanceStatusOptional.get().getAttendanceStatusName());
+
         jsonArray.add(jsonObject);
 
         jsonObject2.put("attendance_status", jsonArray);
