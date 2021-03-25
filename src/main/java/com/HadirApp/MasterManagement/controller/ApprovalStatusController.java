@@ -91,37 +91,34 @@ public class ApprovalStatusController {
     @PutMapping("update{id}")
     @ApiOperation(value = "${ApprovalStatusController.update}")
     public String updateApprovalStatus(@RequestBody ApprovalStatus appstatus, @PathVariable int id) {
-        JSONArray jsonArray = new JSONArray();
+
         JSONObject jsonObject = new JSONObject();
-        JSONObject jsonObject2 = new JSONObject();
-        
+
         Optional<ApprovalStatus> appOptional = repository.findById(id);
 
         if (!appOptional.isPresent()) {
-            return "fail";
+            jsonObject.put("status", "false");
+            jsonObject.put("description", "update successfully, ID Not Found");
+
+            return jsonObject.toString();
         }
         String name = appOptional.get().getApprovalStatusName();
         String active = appOptional.get().getApprovalStatusName();
-        
+
         appstatus.setApprovalStatusId(id);
         repository.save(appstatus);
-        
+
         String nameUpdate = appOptional.get().getApprovalStatusName();
         String activeUpdate = appOptional.get().getApprovalStatusName();
-        
+
         if (name.equals(nameUpdate) && active.equals(activeUpdate)) {
             jsonObject.put("status", "true");
             jsonObject.put("description", "there is no data udated");
-            jsonArray.add(jsonObject);
-            jsonObject2.put("status", jsonArray);
 
             return jsonObject.toString();
         } else {
             jsonObject.put("status", "true");
             jsonObject.put("description", "update successfully");
-            jsonArray.add(jsonObject);
-
-            jsonObject2.put("status", jsonArray);
 
             return jsonObject.toString();
         }
@@ -138,24 +135,19 @@ public class ApprovalStatusController {
                 .buildAndExpand(saveapprovalStatus.getApprovalStatusId()).toUri();
         int afterInsert = maxApprovalStatus();
 
-        JSONArray jSONArray = new JSONArray();
         JSONObject jSONObject = new JSONObject();
-        JSONObject jSONObject1 = new JSONObject();
 
         if (afterInsert > beforeInsert) {
             jSONObject.put("status", "true");
             jSONObject.put("description", "insert successfully");
-            jSONArray.add(jSONObject);
 
         } else {
             jSONObject.put("status", "false");
             jSONObject.put("description", "insert unsuccessfully");
-            jSONArray.add(jSONObject);
+
         }
 
-        jSONObject1.put("status", jSONArray);
-
-        return jSONObject1.toString();
+        return jSONObject.toString();
     }
 
     //read
