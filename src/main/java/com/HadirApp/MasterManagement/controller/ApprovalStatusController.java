@@ -55,7 +55,7 @@ public class ApprovalStatusController {
         for (ApprovalStatus a : ap) {
             JSONObject jSONObject = new JSONObject();
             jSONObject.put("approvalStatusId", a.getApprovalStatusId());
-            jSONObject.put("approvalStatusActive", a.getApprovalStatusName());
+            jSONObject.put("approvalStatusName", a.getApprovalStatusName());
             jSONArray.add(jSONObject);
         }
         j.put("approvalStatusList", jSONArray);
