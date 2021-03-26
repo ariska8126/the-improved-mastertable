@@ -58,7 +58,6 @@ public class HolidayController {
             jsonObject.put("calendarHolidayId", holy.getCalendarHolidayId());
             jsonObject.put("calendarHolidayName", holy.getCalendarHolidayName().toString());
             jsonObject.put("calendarHolidayRemark", holy.getCalendarHolidayRemark());
-            jsonObject.put("calendarHolidayStatus", holy.getCalendarHolidayStatus());
             jsonObject.put("calendarHolidayActive", holy.getCalendarHolidayActive());
             jsonArray.add(jsonObject);
         }
@@ -83,7 +82,6 @@ public class HolidayController {
             jsonObject.put("calendarHolidayId", holy.getCalendarHolidayId());
             jsonObject.put("calendarHolidayName", holy.getCalendarHolidayName().toString());
             jsonObject.put("calendarHolidayRemark", holy.getCalendarHolidayRemark());
-            jsonObject.put("calendarHolidayStatus", holy.getCalendarHolidayStatus());
             jsonObject.put("calendarHolidayActive", holy.getCalendarHolidayActive());
             jsonArray.add(jsonObject);
         }
@@ -112,7 +110,6 @@ public class HolidayController {
         jsonObject.put("calendarHolidayId", holiday.get().getCalendarHolidayId());
         jsonObject.put("calendarHolidayName", holiday.get().getCalendarHolidayName().toString());
         jsonObject.put("calendarHolidayRemark", holiday.get().getCalendarHolidayRemark());
-        jsonObject.put("calendarHolidayStatus", holiday.get().getCalendarHolidayStatus());
         jsonObject.put("calendarHolidayActive", holiday.get().getCalendarHolidayActive());
         jsonArray.add(jsonObject);
 
@@ -135,7 +132,7 @@ public class HolidayController {
             jsonObject.put("description", "update unsuccessfully, id not found");
             jsonArray.add(jsonObject);
         }
-
+        holiday.setCalendarHolidayId(id);
         repository.save(holiday);
 
         jsonObject.put("status", "true");

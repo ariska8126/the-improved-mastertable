@@ -163,7 +163,7 @@ public class AttendanceStatusController {
     }
     
      // CREATE
-    @PostMapping("/insertattendanceatatus")
+    @PostMapping("/insertattendancestatus")
     @ApiOperation(value = "${AttendanceStatusController.insert}")
     public String insertAttendance(@RequestBody AttendanceStatus attendanceStatus) {
         int beforeInsert = maxId();
