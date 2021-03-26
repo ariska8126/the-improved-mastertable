@@ -123,7 +123,7 @@ public class AttendanceStatusController {
     }
     
     // UPDATE AND SOFT DELETE
-    @PutMapping("/update/{id}")
+    @PutMapping("/updateattendancestatus/{id}")
     @ApiOperation(value = "${AttendanceStatusController.update}")
     public String updateAttendanceStatus(@RequestBody AttendanceStatus attendanceStatus, @PathVariable int id) {
         JSONArray jsonArray = new JSONArray();
@@ -163,7 +163,7 @@ public class AttendanceStatusController {
     }
     
      // CREATE
-    @PostMapping("/insert")
+    @PostMapping("/insertattendancestatus")
     @ApiOperation(value = "${AttendanceStatusController.insert}")
     public String insertAttendance(@RequestBody AttendanceStatus attendanceStatus) {
         int beforeInsert = maxId();

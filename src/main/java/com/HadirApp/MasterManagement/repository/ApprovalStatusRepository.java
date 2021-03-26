@@ -19,7 +19,7 @@ public interface ApprovalStatusRepository extends JpaRepository<ApprovalStatus, 
     @Query(value = "SELECT * FROM approval_status where approval_status_active = 'true'", nativeQuery = true)
     List <ApprovalStatus> getActiveApprovalStatus();
     
-    @Query(value = "SELECT MAX(approval_status_id) FROM approval_status", nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) FROM approval_status", nativeQuery = true)
     public String getMaxApprovalStatus();
     
 }

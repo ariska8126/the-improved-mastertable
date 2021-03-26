@@ -5,12 +5,16 @@
  */
 package com.HadirApp.MasterManagement.controller;
 
+import com.HadirApp.MasterManagement.entity.Bootcamp;
+import com.HadirApp.MasterManagement.entity.BootcampDetail;
 import com.HadirApp.MasterManagement.entity.Division;
 import com.HadirApp.MasterManagement.entity.Role;
 import com.HadirApp.MasterManagement.entity.Users;
+import com.HadirApp.MasterManagement.repository.BootcampDetailRepository;
 import com.HadirApp.MasterManagement.repository.UsersRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +43,9 @@ public class UsersController {
 
     @Autowired
     private UsersRepository repository;
+    
+    @Autowired
+    BootcampDetailRepository bootcampDetailRepository;
 
     @GetMapping("/getuser")
     @ApiOperation(value = "${UsersController.getuser}")
@@ -395,6 +402,94 @@ public class UsersController {
         repository.save(users);
         System.out.println("new user saved");
 
+        JSONArray jsona = new JSONArray();
+        JSONObject jSONObject = new JSONObject();
+        JSONObject jSONObject1 = new JSONObject();
+
+        jSONObject1.put("status", "true");
+        jSONObject1.put("description", "insert successfully");
+        jsona.add(jSONObject1);
+
+        jSONObject.put("status", jsona);
+
+        return jSONObject.toString();
+    }
+
+    @PostMapping("/insertemployee")
+    public String insertEmployee(@RequestBody Map<String, ?> input) {
+
+        String userFullname = (String) input.get("userFullname");
+        String userEmail = (String) input.get("userEmail");
+        String userActive = (String) input.get("userActive");
+        String userPhoto = (String) input.get("userPhoto");
+        String bootcampIds = (String) input.get("bootcampId");
+
+        int emailexist = repository.findIfExistEmail(userEmail);
+        if (emailexist == 1) {
+            JSONArray jsona = new JSONArray();
+            JSONObject jSONObject = new JSONObject();
+            JSONObject jSONObject1 = new JSONObject();
+
+            jSONObject1.put("status", "false");
+            jSONObject1.put("description", "insert unsuccessfully, email already exist");
+            jsona.add(jSONObject1);
+
+            jSONObject.put("status", jsona);
+
+            return jSONObject.toString();
+        }
+        
+        String role = (String) input.get("roleId");
+        String division = (String) input.get("divisionId");
+        int roleId = Integer.parseInt(role);
+        int divisionId = Integer.parseInt(division);
+
+        String newID = getAlphaNumericString(8);
+        System.out.println("new generate ID: " + newID);
+        int a = repository.findIfExistID(newID);
+        System.out.println("if exist: " + a);
+        if (a == 1) {
+            do {
+                newID = getAlphaNumericString(8);
+                System.out.println("iterate generate: " + newID);
+                a = repository.findIfExistID(newID);
+                System.out.println("if exist: " + a);
+            } while (a == 1);
+        }
+
+        String dummyPassword = UUID.randomUUID().toString();
+        dummyPassword = dummyPassword.substring(0, 8);
+        String dummyuserUnixcodeValue = UUID.randomUUID().toString();
+        dummyuserUnixcodeValue = dummyuserUnixcodeValue.substring(0, 6);
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
+
+        String encodePassword = encoder.encode(dummyPassword);
+        
+        String userId = newID; //set user id
+        String userPassword = encodePassword; //set user password
+        String userUnixcodeValue = dummyuserUnixcodeValue; //set user unicodevalue
+        Date userUnixcodeDate = new Date(); //set user UnixcodeDate
+        
+        // Generate bootcamp detail id
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        Date date = new Date();
+        String currentDate = formatter.format(date);
+        String bootcampDetailId = newID+currentDate;
+        
+        // Save Emplolee 
+        Users users = new Users(userId, userFullname, userEmail, userPassword,
+                userActive, userUnixcodeValue, userUnixcodeDate, userPhoto,
+                new Role(roleId), new Division(divisionId));
+        
+        // Save Bootcamp Detail
+        BootcampDetail bootcampDetail = new BootcampDetail(bootcampDetailId, new Users(newID), new Bootcamp(bootcampIds));
+
+        repository.save(users);
+        bootcampDetailRepository.save(bootcampDetail);
+        
+        System.out.println("new user saved");
+        
         JSONArray jsona = new JSONArray();
         JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();

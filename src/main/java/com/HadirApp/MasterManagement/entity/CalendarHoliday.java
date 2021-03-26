@@ -30,9 +30,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "CalendarHoliday.findAll", query = "SELECT c FROM CalendarHoliday c"),
     @NamedQuery(name = "CalendarHoliday.findByCalendarHolidayId", query = "SELECT c FROM CalendarHoliday c WHERE c.calendarHolidayId = :calendarHolidayId"),
-    @NamedQuery(name = "CalendarHoliday.findByCalendarHolidayDate", query = "SELECT c FROM CalendarHoliday c WHERE c.calendarHolidayDate = :calendarHolidayDate"),
+    @NamedQuery(name = "CalendarHoliday.findByCalendarHolidayName", query = "SELECT c FROM CalendarHoliday c WHERE c.calendarHolidayName = :calendarHolidayName"),
     @NamedQuery(name = "CalendarHoliday.findByCalendarHolidayRemark", query = "SELECT c FROM CalendarHoliday c WHERE c.calendarHolidayRemark = :calendarHolidayRemark"),
-    @NamedQuery(name = "CalendarHoliday.findByCalendarHolidayStatus", query = "SELECT c FROM CalendarHoliday c WHERE c.calendarHolidayStatus = :calendarHolidayStatus"),
     @NamedQuery(name = "CalendarHoliday.findByCalendarHolidayActive", query = "SELECT c FROM CalendarHoliday c WHERE c.calendarHolidayActive = :calendarHolidayActive")})
 public class CalendarHoliday implements Serializable {
 
@@ -43,15 +42,12 @@ public class CalendarHoliday implements Serializable {
     @Column(name = "calendar_holiday_id")
     private Integer calendarHolidayId;
     @Basic(optional = false)
-    @Column(name = "calendar_holiday_date")
+    @Column(name = "calendar_holiday_name")
     @Temporal(TemporalType.DATE)
-    private Date calendarHolidayDate;
+    private Date calendarHolidayName;
     @Basic(optional = false)
     @Column(name = "calendar_holiday_remark")
     private String calendarHolidayRemark;
-    @Basic(optional = false)
-    @Column(name = "calendar_holiday_status")
-    private String calendarHolidayStatus;
     @Basic(optional = false)
     @Column(name = "calendar_holiday_active")
     private String calendarHolidayActive;
@@ -63,11 +59,10 @@ public class CalendarHoliday implements Serializable {
         this.calendarHolidayId = calendarHolidayId;
     }
 
-    public CalendarHoliday(Integer calendarHolidayId, Date calendarHolidayDate, String calendarHolidayRemark, String calendarHolidayStatus, String calendarHolidayActive) {
+    public CalendarHoliday(Integer calendarHolidayId, Date calendarHolidayName, String calendarHolidayRemark, String calendarHolidayActive) {
         this.calendarHolidayId = calendarHolidayId;
-        this.calendarHolidayDate = calendarHolidayDate;
+        this.calendarHolidayName = calendarHolidayName;
         this.calendarHolidayRemark = calendarHolidayRemark;
-        this.calendarHolidayStatus = calendarHolidayStatus;
         this.calendarHolidayActive = calendarHolidayActive;
     }
 
@@ -79,12 +74,12 @@ public class CalendarHoliday implements Serializable {
         this.calendarHolidayId = calendarHolidayId;
     }
 
-    public Date getCalendarHolidayDate() {
-        return calendarHolidayDate;
+    public Date getCalendarHolidayName() {
+        return calendarHolidayName;
     }
 
-    public void setCalendarHolidayDate(Date calendarHolidayDate) {
-        this.calendarHolidayDate = calendarHolidayDate;
+    public void setCalendarHolidayName(Date calendarHolidayName) {
+        this.calendarHolidayName = calendarHolidayName;
     }
 
     public String getCalendarHolidayRemark() {
@@ -93,14 +88,6 @@ public class CalendarHoliday implements Serializable {
 
     public void setCalendarHolidayRemark(String calendarHolidayRemark) {
         this.calendarHolidayRemark = calendarHolidayRemark;
-    }
-
-    public String getCalendarHolidayStatus() {
-        return calendarHolidayStatus;
-    }
-
-    public void setCalendarHolidayStatus(String calendarHolidayStatus) {
-        this.calendarHolidayStatus = calendarHolidayStatus;
     }
 
     public String getCalendarHolidayActive() {
