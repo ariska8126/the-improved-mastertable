@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -23,4 +24,7 @@ public interface BootcampRepository extends JpaRepository<Bootcamp, String>{
     public String getMaxBootcamp();
 
     public Optional<Bootcamp> findById(String id);
+    
+    @Query(value = "SELECT b.* FROM bootcamp b JOIN bootcamp_detail bd ON b.bootcamp_id = bd.bootcamp_id WHERE user_id = ?1", nativeQuery = true)
+    public List<Bootcamp> getBootcamp(@Param ("id") String id);
 }

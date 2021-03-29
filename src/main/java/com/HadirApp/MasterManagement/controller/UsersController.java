@@ -11,6 +11,7 @@ import com.HadirApp.MasterManagement.entity.Division;
 import com.HadirApp.MasterManagement.entity.Role;
 import com.HadirApp.MasterManagement.entity.Users;
 import com.HadirApp.MasterManagement.repository.BootcampDetailRepository;
+import com.HadirApp.MasterManagement.repository.BootcampRepository;
 import com.HadirApp.MasterManagement.repository.UsersRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 /**
  *
@@ -43,7 +45,10 @@ public class UsersController {
 
     @Autowired
     private UsersRepository repository;
-    
+
+    @Autowired
+    private BootcampRepository bootcampRepository;
+
     @Autowired
     BootcampDetailRepository bootcampDetailRepository;
 
@@ -438,7 +443,7 @@ public class UsersController {
 
             return jSONObject.toString();
         }
-        
+
         String role = (String) input.get("roleId");
         String division = (String) input.get("divisionId");
         int roleId = Integer.parseInt(role);
@@ -465,31 +470,31 @@ public class UsersController {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
 
         String encodePassword = encoder.encode(dummyPassword);
-        
+
         String userId = newID; //set user id
         String userPassword = encodePassword; //set user password
         String userUnixcodeValue = dummyuserUnixcodeValue; //set user unicodevalue
         Date userUnixcodeDate = new Date(); //set user UnixcodeDate
-        
+
         // Generate bootcamp detail id
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         Date date = new Date();
         String currentDate = formatter.format(date);
-        String bootcampDetailId = newID+currentDate;
-        
+        String bootcampDetailId = newID + currentDate;
+
         // Save Emplolee 
         Users users = new Users(userId, userFullname, userEmail, userPassword,
                 userActive, userUnixcodeValue, userUnixcodeDate, userPhoto,
                 new Role(roleId), new Division(divisionId));
-        
+
         // Save Bootcamp Detail
         BootcampDetail bootcampDetail = new BootcampDetail(bootcampDetailId, new Users(newID), new Bootcamp(bootcampIds));
 
         repository.save(users);
         bootcampDetailRepository.save(bootcampDetail);
-        
+
         System.out.println("new user saved");
-        
+
         JSONArray jsona = new JSONArray();
         JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
@@ -561,6 +566,57 @@ public class UsersController {
 
         return jSONObject.toString();
 //        return "change failed";
+    }
+
+    @DeleteMapping("/deleteuser/{id}")
+    public String hardDeleteUser(@PathVariable String id) {
+
+        repository.deleteUserById(id);
+
+        JSONArray jsona = new JSONArray();
+        JSONObject jSONObject = new JSONObject();
+        JSONObject jSONObject1 = new JSONObject();
+
+        jSONObject1.put("status", "true");
+        jSONObject1.put("description", "delete succefully");
+        jsona.add(jSONObject1);
+
+        jSONObject.put("status", jsona);
+
+        return jSONObject.toJSONString();
+    }
+
+    @GetMapping("/gettrainerbootcamp/{id}")
+    @ApiOperation(value = "Get Bootcamp by Trainer")
+    public String getTrainerBootcampList(@PathVariable String id) {
+
+        JSONArray jsona = new JSONArray();
+        JSONObject jsono = new JSONObject();
+
+        List<Bootcamp> bootcamp = bootcampRepository.getBootcamp(id);
+
+        if (bootcamp == null) {
+            JSONObject jSONObject1 = new JSONObject();
+
+            jSONObject1.put("status", "false");
+            jSONObject1.put("description", "trainer not found");
+            return jSONObject1.toString();
+
+        }
+
+        for (Bootcamp b : bootcamp) {
+
+            JSONObject jSONObject1 = new JSONObject();
+            jSONObject1.put("bootcampId", b.getBootcampId());
+            jSONObject1.put("bootcampActive", b.getBootcampActive());
+            jSONObject1.put("bootcampLocation", b.getBootcampLocation());
+            jSONObject1.put("bootcampName", b.getBootcampName());
+
+            jsona.add(jSONObject1);
+        }
+        jsono.put("bootcampList", jsona);
+
+        return jsono.toString();
     }
 
     static String getAlphaNumericString(int n) {
