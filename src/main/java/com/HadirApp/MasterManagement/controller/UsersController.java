@@ -300,9 +300,6 @@ public class UsersController {
 
             jSONObject.put("status", "false");
             jSONObject.put("description", "update unsuccessfully, userId not found");
-            jsonArray.add(jSONObject);
-
-            jSONObject2.put("status", jsonArray);
 
             return jSONObject.toString();
         }
@@ -329,9 +326,6 @@ public class UsersController {
 
         jSONObject.put("status", "true");
         jSONObject.put("description", "update successfully");
-        jsonArray.add(jSONObject);
-
-        jSONObject2.put("status", jsonArray);
 
         return jSONObject.toString();
 
@@ -356,11 +350,8 @@ public class UsersController {
 
             jSONObject1.put("status", "false");
             jSONObject1.put("description", "insert unsuccessfully, email already exist");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
 
         String role = (String) input.get("roleId");
@@ -409,11 +400,8 @@ public class UsersController {
 
         jSONObject1.put("status", "true");
         jSONObject1.put("description", "insert successfully");
-        jsona.add(jSONObject1);
 
-        jSONObject.put("status", jsona);
-
-        return jSONObject.toString();
+        return jSONObject1.toString();
     }
 
     @PostMapping("/insertemployee")
@@ -433,11 +421,8 @@ public class UsersController {
 
             jSONObject1.put("status", "false");
             jSONObject1.put("description", "insert unsuccessfully, email already exist");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
         
         String role = (String) input.get("roleId");
@@ -497,11 +482,8 @@ public class UsersController {
 
         jSONObject1.put("status", "true");
         jSONObject1.put("description", "insert successfully");
-        jsona.add(jSONObject1);
 
-        jSONObject.put("status", jsona);
-
-        return jSONObject.toString();
+        return jSONObject1.toString();
     }
 
     @PutMapping("/changepassword/{id}")
@@ -521,11 +503,8 @@ public class UsersController {
 
             jSONObject1.put("status", "false");
             jSONObject1.put("description", "update unsuccessfully, user not found");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
 
         String activePassword = user.getUserPassword();
@@ -544,11 +523,8 @@ public class UsersController {
 
             jSONObject1.put("status", "true");
             jSONObject1.put("description", "update successfully");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
         JSONArray jsona = new JSONArray();
         JSONObject jSONObject = new JSONObject();
@@ -556,11 +532,8 @@ public class UsersController {
 
         jSONObject1.put("status", "false");
         jSONObject1.put("description", "update unsuccessfully, your old password is invalid");
-        jsona.add(jSONObject1);
 
-        jSONObject.put("status", jsona);
-
-        return jSONObject.toString();
+        return jSONObject1.toString();
 //        return "change failed";
     }
 
@@ -576,11 +549,8 @@ public class UsersController {
         
         jSONObject1.put("status", "true");
         jSONObject1.put("description", "delete succefully");
-        jsona.add(jSONObject1);
-
-        jSONObject.put("status", jsona);
         
-        return jSONObject.toJSONString();
+        return jSONObject1.toJSONString();
     }
 
     static String getAlphaNumericString(int n) {
