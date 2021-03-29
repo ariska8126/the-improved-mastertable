@@ -292,9 +292,8 @@ public class UsersController {
     @PutMapping("/update/{id}")
     @ApiOperation(value = "${UsersController.updatebyid}")
     public String updateUser(@RequestBody Map<String, ?> input, @PathVariable String id) {
-        JSONArray jsonArray = new JSONArray();
+
         JSONObject jSONObject = new JSONObject();
-        JSONObject jSONObject2 = new JSONObject();
 
         Iterable<Users> userlist = repository.getUsersListByID(id);
         System.out.println("user: " + userlist);
@@ -304,9 +303,6 @@ public class UsersController {
 
             jSONObject.put("status", "false");
             jSONObject.put("description", "update unsuccessfully, userId not found");
-            jsonArray.add(jSONObject);
-
-            jSONObject2.put("status", jsonArray);
 
             return jSONObject.toString();
         }
@@ -333,9 +329,6 @@ public class UsersController {
 
         jSONObject.put("status", "true");
         jSONObject.put("description", "update successfully");
-        jsonArray.add(jSONObject);
-
-        jSONObject2.put("status", jsonArray);
 
         return jSONObject.toString();
 
@@ -354,17 +347,12 @@ public class UsersController {
 
         int emailexist = repository.findIfExistEmail(userEmail);
         if (emailexist == 1) {
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "false");
             jSONObject1.put("description", "insert unsuccessfully, email already exist");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
 
         String role = (String) input.get("roleId");
@@ -407,17 +395,12 @@ public class UsersController {
         repository.save(users);
         System.out.println("new user saved");
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "true");
         jSONObject1.put("description", "insert successfully");
-        jsona.add(jSONObject1);
 
-        jSONObject.put("status", jsona);
-
-        return jSONObject.toString();
+        return jSONObject1.toString();
     }
 
     @PostMapping("/insertemployee")
@@ -431,17 +414,13 @@ public class UsersController {
 
         int emailexist = repository.findIfExistEmail(userEmail);
         if (emailexist == 1) {
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
+
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "false");
             jSONObject1.put("description", "insert unsuccessfully, email already exist");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
 
         String role = (String) input.get("roleId");
@@ -495,17 +474,12 @@ public class UsersController {
 
         System.out.println("new user saved");
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "true");
         jSONObject1.put("description", "insert successfully");
-        jsona.add(jSONObject1);
 
-        jSONObject.put("status", jsona);
-
-        return jSONObject.toString();
+        return jSONObject1.toString();
     }
 
     @PutMapping("/changepassword/{id}")
@@ -519,17 +493,12 @@ public class UsersController {
 
         Users user = repository.getEntityUsersByID(id);
         if (user == null) {
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "false");
             jSONObject1.put("description", "update unsuccessfully, user not found");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
 
         String activePassword = user.getUserPassword();
@@ -542,29 +511,21 @@ public class UsersController {
             user.setUserPassword(newPassword);
             repository.save(user);
 //            return "change password success";
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
+
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "true");
             jSONObject1.put("description", "update successfully");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
+
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "false");
         jSONObject1.put("description", "update unsuccessfully, your old password is invalid");
-        jsona.add(jSONObject1);
 
-        jSONObject.put("status", jsona);
-
-        return jSONObject.toString();
+        return jSONObject1.toString();
 //        return "change failed";
     }
 
@@ -573,17 +534,13 @@ public class UsersController {
 
         repository.deleteUserById(id);
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "true");
         jSONObject1.put("description", "delete succefully");
-        jsona.add(jSONObject1);
 
-        jSONObject.put("status", jsona);
+        return jSONObject1.toJSONString();
 
-        return jSONObject.toJSONString();
     }
 
     @GetMapping("/gettrainerbootcamp/{id}")
