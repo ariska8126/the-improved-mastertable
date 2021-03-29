@@ -98,7 +98,7 @@ public class ApprovalStatusController {
 
         if (!appOptional.isPresent()) {
             jsonObject.put("status", "false");
-            jsonObject.put("description", "update successfully, ID Not Found");
+            jsonObject.put("description", "update unsuccessfully, ID Not Found");
 
             return jsonObject.toString();
         }

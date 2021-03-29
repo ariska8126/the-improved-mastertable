@@ -58,7 +58,7 @@ public class DivisionController {
             jSONObject.put("divisionName", div.getDivisionName());
             jSONArray.add(jSONObject);
         }
-        j.put("division_list", jSONArray);
+        j.put("divisionList", jSONArray);
 
         return j.toString();
     }
