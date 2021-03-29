@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 /**
  *
@@ -561,6 +562,25 @@ public class UsersController {
 
         return jSONObject.toString();
 //        return "change failed";
+    }
+
+    @DeleteMapping("/deleteuser/{id}")
+    public String hardDeleteUser(@PathVariable String id){
+        
+        
+        repository.deleteUserById(id);
+        
+        JSONArray jsona = new JSONArray();
+        JSONObject jSONObject = new JSONObject();
+        JSONObject jSONObject1 = new JSONObject();
+        
+        jSONObject1.put("status", "true");
+        jSONObject1.put("description", "delete succefully");
+        jsona.add(jSONObject1);
+
+        jSONObject.put("status", jsona);
+        
+        return jSONObject.toJSONString();
     }
 
     static String getAlphaNumericString(int n) {

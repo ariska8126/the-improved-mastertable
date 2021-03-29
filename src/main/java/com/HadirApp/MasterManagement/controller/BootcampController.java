@@ -82,6 +82,7 @@ public class BootcampController {
             jsonObject.put("bootcampId", bl.getBootcampId());
             jsonObject.put("bootcampName", bl.getBootcampName());
             jsonObject.put("bootcampLocation", bl.getBootcampLocation());
+            jsonObject.put("bootcampActive", bl.getBootcampActive());
             jsonArray.add(jsonObject);
         }
 
@@ -105,6 +106,7 @@ public class BootcampController {
             jsonObject.put("bootcampId", bl.getBootcampId());
             jsonObject.put("bootcampName", bl.getBootcampName());
             jsonObject.put("bootcampLocation", bl.getBootcampLocation());
+            jsonObject.put("bootcampActive", bl.getBootcampActive());
             jsonArray.add(jsonObject);
         }
 
@@ -136,7 +138,7 @@ public class BootcampController {
         jsonObject.put("bootcampId", bootcamp.get().getBootcampId());
         jsonObject.put("bootcampName", bootcamp.get().getBootcampName());
         jsonObject.put("bootcampLocation", bootcamp.get().getBootcampLocation());
-
+        jsonObject.put("bootcamoActive", bootcamp.get().getBootcampActive());
         jsonObject2.put("bootcamp", jsonArray);
 
         return jsonObject.toString();
