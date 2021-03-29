@@ -11,6 +11,7 @@ import com.HadirApp.MasterManagement.entity.Division;
 import com.HadirApp.MasterManagement.entity.Role;
 import com.HadirApp.MasterManagement.entity.Users;
 import com.HadirApp.MasterManagement.repository.BootcampDetailRepository;
+import com.HadirApp.MasterManagement.repository.BootcampRepository;
 import com.HadirApp.MasterManagement.repository.UsersRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,7 +45,10 @@ public class UsersController {
 
     @Autowired
     private UsersRepository repository;
-    
+
+    @Autowired
+    private BootcampRepository bootcampRepository;
+
     @Autowired
     BootcampDetailRepository bootcampDetailRepository;
 
@@ -288,9 +292,8 @@ public class UsersController {
     @PutMapping("/update/{id}")
     @ApiOperation(value = "${UsersController.updatebyid}")
     public String updateUser(@RequestBody Map<String, ?> input, @PathVariable String id) {
-        JSONArray jsonArray = new JSONArray();
+
         JSONObject jSONObject = new JSONObject();
-        JSONObject jSONObject2 = new JSONObject();
 
         Iterable<Users> userlist = repository.getUsersListByID(id);
         System.out.println("user: " + userlist);
@@ -344,8 +347,6 @@ public class UsersController {
 
         int emailexist = repository.findIfExistEmail(userEmail);
         if (emailexist == 1) {
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "false");
@@ -394,8 +395,6 @@ public class UsersController {
         repository.save(users);
         System.out.println("new user saved");
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "true");
@@ -415,8 +414,7 @@ public class UsersController {
 
         int emailexist = repository.findIfExistEmail(userEmail);
         if (emailexist == 1) {
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
+
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "false");
@@ -424,7 +422,7 @@ public class UsersController {
 
             return jSONObject1.toString();
         }
-        
+
         String role = (String) input.get("roleId");
         String division = (String) input.get("divisionId");
         int roleId = Integer.parseInt(role);
@@ -451,33 +449,31 @@ public class UsersController {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
 
         String encodePassword = encoder.encode(dummyPassword);
-        
+
         String userId = newID; //set user id
         String userPassword = encodePassword; //set user password
         String userUnixcodeValue = dummyuserUnixcodeValue; //set user unicodevalue
         Date userUnixcodeDate = new Date(); //set user UnixcodeDate
-        
+
         // Generate bootcamp detail id
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         Date date = new Date();
         String currentDate = formatter.format(date);
-        String bootcampDetailId = newID+currentDate;
-        
+        String bootcampDetailId = newID + currentDate;
+
         // Save Emplolee 
         Users users = new Users(userId, userFullname, userEmail, userPassword,
                 userActive, userUnixcodeValue, userUnixcodeDate, userPhoto,
                 new Role(roleId), new Division(divisionId));
-        
+
         // Save Bootcamp Detail
         BootcampDetail bootcampDetail = new BootcampDetail(bootcampDetailId, new Users(newID), new Bootcamp(bootcampIds));
 
         repository.save(users);
         bootcampDetailRepository.save(bootcampDetail);
-        
+
         System.out.println("new user saved");
-        
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
+
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "true");
@@ -497,8 +493,6 @@ public class UsersController {
 
         Users user = repository.getEntityUsersByID(id);
         if (user == null) {
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "false");
@@ -517,8 +511,7 @@ public class UsersController {
             user.setUserPassword(newPassword);
             repository.save(user);
 //            return "change password success";
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
+
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "true");
@@ -526,8 +519,7 @@ public class UsersController {
 
             return jSONObject1.toString();
         }
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
+
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "false");
@@ -538,19 +530,50 @@ public class UsersController {
     }
 
     @DeleteMapping("/deleteuser/{id}")
-    public String hardDeleteUser(@PathVariable String id){
-        
-        
+    public String hardDeleteUser(@PathVariable String id) {
+
         repository.deleteUserById(id);
-        
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
+
         JSONObject jSONObject1 = new JSONObject();
-        
+
         jSONObject1.put("status", "true");
         jSONObject1.put("description", "delete succefully");
-        
+
         return jSONObject1.toJSONString();
+
+    }
+
+    @GetMapping("/gettrainerbootcamp/{id}")
+    @ApiOperation(value = "Get Bootcamp by Trainer")
+    public String getTrainerBootcampList(@PathVariable String id) {
+
+        JSONArray jsona = new JSONArray();
+        JSONObject jsono = new JSONObject();
+
+        List<Bootcamp> bootcamp = bootcampRepository.getBootcamp(id);
+
+        if (bootcamp == null) {
+            JSONObject jSONObject1 = new JSONObject();
+
+            jSONObject1.put("status", "false");
+            jSONObject1.put("description", "trainer not found");
+            return jSONObject1.toString();
+
+        }
+
+        for (Bootcamp b : bootcamp) {
+
+            JSONObject jSONObject1 = new JSONObject();
+            jSONObject1.put("bootcampId", b.getBootcampId());
+            jSONObject1.put("bootcampActive", b.getBootcampActive());
+            jSONObject1.put("bootcampLocation", b.getBootcampLocation());
+            jSONObject1.put("bootcampName", b.getBootcampName());
+
+            jsona.add(jSONObject1);
+        }
+        jsono.put("bootcampList", jsona);
+
+        return jsono.toString();
     }
 
     static String getAlphaNumericString(int n) {
