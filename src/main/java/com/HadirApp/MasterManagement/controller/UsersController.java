@@ -64,9 +64,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
             jSONArray.add(jSONObject1);
@@ -93,9 +93,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
 
@@ -125,9 +125,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
 
@@ -157,9 +157,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
 
@@ -189,9 +189,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
 
@@ -221,9 +221,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
 
@@ -248,9 +248,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
 

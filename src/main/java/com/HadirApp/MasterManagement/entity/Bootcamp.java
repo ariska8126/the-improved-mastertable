@@ -6,15 +6,19 @@
 package com.HadirApp.MasterManagement.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -45,6 +49,8 @@ public class Bootcamp implements Serializable {
     @Basic(optional = false)
     @Column(name = "bootcamp_active")
     private String bootcampActive;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bootcampId")
+    private List<BootcampDetail> bootcampDetailList;
 
     public Bootcamp() {
     }
@@ -90,6 +96,15 @@ public class Bootcamp implements Serializable {
 
     public void setBootcampActive(String bootcampActive) {
         this.bootcampActive = bootcampActive;
+    }
+
+    @XmlTransient
+    public List<BootcampDetail> getBootcampDetailList() {
+        return bootcampDetailList;
+    }
+
+    public void setBootcampDetailList(List<BootcampDetail> bootcampDetailList) {
+        this.bootcampDetailList = bootcampDetailList;
     }
 
     @Override

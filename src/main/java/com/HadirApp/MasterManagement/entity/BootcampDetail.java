@@ -47,14 +47,13 @@ public class BootcampDetail implements Serializable {
     public BootcampDetail(String bootcampDetailId) {
         this.bootcampDetailId = bootcampDetailId;
     }
-
+    
     public BootcampDetail(String bootcampDetailId, Users userId, Bootcamp bootcampId) {
         this.bootcampDetailId = bootcampDetailId;
         this.userId = userId;
         this.bootcampId = bootcampId;
     }
- 
-
+    
     public String getBootcampDetailId() {
         return bootcampDetailId;
     }
@@ -102,10 +101,6 @@ public class BootcampDetail implements Serializable {
     @Override
     public String toString() {
         return "com.HadirApp.MasterManagement.entity.BootcampDetail[ bootcampDetailId=" + bootcampDetailId + " ]";
-    }
-
-    public void setUserId(String newID) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

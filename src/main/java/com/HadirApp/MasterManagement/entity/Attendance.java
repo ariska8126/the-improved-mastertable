@@ -33,7 +33,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Attendance.findByAttendanceId", query = "SELECT a FROM Attendance a WHERE a.attendanceId = :attendanceId"),
     @NamedQuery(name = "Attendance.findByAttendanceDate", query = "SELECT a FROM Attendance a WHERE a.attendanceDate = :attendanceDate"),
     @NamedQuery(name = "Attendance.findByAttendanceTime", query = "SELECT a FROM Attendance a WHERE a.attendanceTime = :attendanceTime"),
-    @NamedQuery(name = "Attendance.findByAttendanceType", query = "SELECT a FROM Attendance a WHERE a.attendanceType = :attendanceType")})
+    @NamedQuery(name = "Attendance.findByAttendanceType", query = "SELECT a FROM Attendance a WHERE a.attendanceType = :attendanceType"),
+    @NamedQuery(name = "Attendance.findByAttendanceLogitude", query = "SELECT a FROM Attendance a WHERE a.attendanceLogitude = :attendanceLogitude"),
+    @NamedQuery(name = "Attendance.findByAttendanceLatitude", query = "SELECT a FROM Attendance a WHERE a.attendanceLatitude = :attendanceLatitude")})
 public class Attendance implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,6 +62,12 @@ public class Attendance implements Serializable {
     @Basic(optional = false)
     @Column(name = "attendance_type")
     private String attendanceType;
+    @Basic(optional = false)
+    @Column(name = "attendance_logitude")
+    private String attendanceLogitude;
+    @Basic(optional = false)
+    @Column(name = "attendance_latitude")
+    private String attendanceLatitude;
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @ManyToOne(optional = false)
     private Users userId;
@@ -74,13 +82,15 @@ public class Attendance implements Serializable {
         this.attendanceId = attendanceId;
     }
 
-    public Attendance(String attendanceId, Date attendanceDate, Date attendanceTime, String attendanceRemark, String attendanceAttachment, String attendanceType) {
+    public Attendance(String attendanceId, Date attendanceDate, Date attendanceTime, String attendanceRemark, String attendanceAttachment, String attendanceType, String attendanceLogitude, String attendanceLatitude) {
         this.attendanceId = attendanceId;
         this.attendanceDate = attendanceDate;
         this.attendanceTime = attendanceTime;
         this.attendanceRemark = attendanceRemark;
         this.attendanceAttachment = attendanceAttachment;
         this.attendanceType = attendanceType;
+        this.attendanceLogitude = attendanceLogitude;
+        this.attendanceLatitude = attendanceLatitude;
     }
 
     public String getAttendanceId() {
@@ -129,6 +139,22 @@ public class Attendance implements Serializable {
 
     public void setAttendanceType(String attendanceType) {
         this.attendanceType = attendanceType;
+    }
+
+    public String getAttendanceLogitude() {
+        return attendanceLogitude;
+    }
+
+    public void setAttendanceLogitude(String attendanceLogitude) {
+        this.attendanceLogitude = attendanceLogitude;
+    }
+
+    public String getAttendanceLatitude() {
+        return attendanceLatitude;
+    }
+
+    public void setAttendanceLatitude(String attendanceLatitude) {
+        this.attendanceLatitude = attendanceLatitude;
     }
 
     public Users getUserId() {
