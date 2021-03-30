@@ -5,12 +5,17 @@
  */
 package com.HadirApp.MasterManagement.controller;
 
+import com.HadirApp.MasterManagement.entity.Bootcamp;
+import com.HadirApp.MasterManagement.entity.BootcampDetail;
 import com.HadirApp.MasterManagement.entity.Division;
 import com.HadirApp.MasterManagement.entity.Role;
 import com.HadirApp.MasterManagement.entity.Users;
+import com.HadirApp.MasterManagement.repository.BootcampDetailRepository;
+import com.HadirApp.MasterManagement.repository.BootcampRepository;
 import com.HadirApp.MasterManagement.repository.UsersRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 /**
  *
@@ -37,8 +43,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Api(tags = "User Management")
 public class UsersController {
 
-     @Autowired
+    @Autowired
     private UsersRepository repository;
+
+    @Autowired
+    private BootcampRepository bootcampRepository;
+
+    @Autowired
+    BootcampDetailRepository bootcampDetailRepository;
 
     @GetMapping("/getuser")
     @ApiOperation(value = "${UsersController.getuser}")
@@ -52,9 +64,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
             jSONArray.add(jSONObject1);
@@ -81,9 +93,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
 
@@ -113,9 +125,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
 
@@ -145,9 +157,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
 
@@ -177,9 +189,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
 
@@ -209,9 +221,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
 
@@ -236,9 +248,9 @@ public class UsersController {
             jSONObject1.put("userFullname", u.getUserFullname());
             jSONObject1.put("userEmail", u.getUserEmail());
             jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionID", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
             jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleID", u.getRoleId().getRoleId());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
             jSONObject1.put("roleName", u.getRoleId().getRoleName());
             jSONObject1.put("userActive", u.getUserActive());
 
@@ -280,9 +292,8 @@ public class UsersController {
     @PutMapping("/update/{id}")
     @ApiOperation(value = "${UsersController.updatebyid}")
     public String updateUser(@RequestBody Map<String, ?> input, @PathVariable String id) {
-        JSONArray jsonArray = new JSONArray();
+
         JSONObject jSONObject = new JSONObject();
-        JSONObject jSONObject2 = new JSONObject();
 
         Iterable<Users> userlist = repository.getUsersListByID(id);
         System.out.println("user: " + userlist);
@@ -292,9 +303,6 @@ public class UsersController {
 
             jSONObject.put("status", "false");
             jSONObject.put("description", "update unsuccessfully, userId not found");
-            jsonArray.add(jSONObject);
-
-            jSONObject2.put("status", jsonArray);
 
             return jSONObject.toString();
         }
@@ -321,9 +329,6 @@ public class UsersController {
 
         jSONObject.put("status", "true");
         jSONObject.put("description", "update successfully");
-        jsonArray.add(jSONObject);
-
-        jSONObject2.put("status", jsonArray);
 
         return jSONObject.toString();
 
@@ -342,17 +347,12 @@ public class UsersController {
 
         int emailexist = repository.findIfExistEmail(userEmail);
         if (emailexist == 1) {
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "false");
             jSONObject1.put("description", "insert unsuccessfully, email already exist");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
 
         String role = (String) input.get("roleId");
@@ -395,17 +395,91 @@ public class UsersController {
         repository.save(users);
         System.out.println("new user saved");
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "true");
         jSONObject1.put("description", "insert successfully");
-        jsona.add(jSONObject1);
 
-        jSONObject.put("status", jsona);
+        return jSONObject1.toString();
+    }
 
-        return jSONObject.toString();
+    @PostMapping("/insertemployee")
+    public String insertEmployee(@RequestBody Map<String, ?> input) {
+
+        String userFullname = (String) input.get("userFullname");
+        String userEmail = (String) input.get("userEmail");
+        String userActive = (String) input.get("userActive");
+        String userPhoto = (String) input.get("userPhoto");
+        String bootcampIds = (String) input.get("bootcampId");
+
+        int emailexist = repository.findIfExistEmail(userEmail);
+        if (emailexist == 1) {
+
+            JSONObject jSONObject1 = new JSONObject();
+
+            jSONObject1.put("status", "false");
+            jSONObject1.put("description", "insert unsuccessfully, email already exist");
+
+            return jSONObject1.toString();
+        }
+
+        String role = (String) input.get("roleId");
+        String division = (String) input.get("divisionId");
+        int roleId = Integer.parseInt(role);
+        int divisionId = Integer.parseInt(division);
+
+        String newID = getAlphaNumericString(8);
+        System.out.println("new generate ID: " + newID);
+        int a = repository.findIfExistID(newID);
+        System.out.println("if exist: " + a);
+        if (a == 1) {
+            do {
+                newID = getAlphaNumericString(8);
+                System.out.println("iterate generate: " + newID);
+                a = repository.findIfExistID(newID);
+                System.out.println("if exist: " + a);
+            } while (a == 1);
+        }
+
+        String dummyPassword = UUID.randomUUID().toString();
+        dummyPassword = dummyPassword.substring(0, 8);
+        String dummyuserUnixcodeValue = UUID.randomUUID().toString();
+        dummyuserUnixcodeValue = dummyuserUnixcodeValue.substring(0, 6);
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
+
+        String encodePassword = encoder.encode(dummyPassword);
+
+        String userId = newID; //set user id
+        String userPassword = encodePassword; //set user password
+        String userUnixcodeValue = dummyuserUnixcodeValue; //set user unicodevalue
+        Date userUnixcodeDate = new Date(); //set user UnixcodeDate
+
+        // Generate bootcamp detail id
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        Date date = new Date();
+        String currentDate = formatter.format(date);
+        String bootcampDetailId = newID + currentDate;
+
+        // Save Emplolee 
+        Users users = new Users(userId, userFullname, userEmail, userPassword,
+                userActive, userUnixcodeValue, userUnixcodeDate, userPhoto,
+                new Role(roleId), new Division(divisionId));
+
+        // Save Bootcamp Detail
+        BootcampDetail bootcampDetail = new BootcampDetail(bootcampDetailId, new Users(newID), new Bootcamp(bootcampIds));
+
+        repository.save(users);
+        bootcampDetailRepository.save(bootcampDetail);
+
+        System.out.println("new user saved");
+
+        JSONObject jSONObject1 = new JSONObject();
+
+        jSONObject1.put("status", "true");
+        jSONObject1.put("description", "insert successfully");
+
+        return jSONObject1.toString();
     }
 
     @PutMapping("/changepassword/{id}")
@@ -419,17 +493,12 @@ public class UsersController {
 
         Users user = repository.getEntityUsersByID(id);
         if (user == null) {
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "false");
             jSONObject1.put("description", "update unsuccessfully, user not found");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
 
         String activePassword = user.getUserPassword();
@@ -442,30 +511,69 @@ public class UsersController {
             user.setUserPassword(newPassword);
             repository.save(user);
 //            return "change password success";
-            JSONArray jsona = new JSONArray();
-            JSONObject jSONObject = new JSONObject();
+
             JSONObject jSONObject1 = new JSONObject();
 
             jSONObject1.put("status", "true");
             jSONObject1.put("description", "update successfully");
-            jsona.add(jSONObject1);
 
-            jSONObject.put("status", jsona);
-
-            return jSONObject.toString();
+            return jSONObject1.toString();
         }
-        JSONArray jsona = new JSONArray();
-        JSONObject jSONObject = new JSONObject();
+
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "false");
         jSONObject1.put("description", "update unsuccessfully, your old password is invalid");
-        jsona.add(jSONObject1);
 
-        jSONObject.put("status", jsona);
-
-        return jSONObject.toString();
+        return jSONObject1.toString();
 //        return "change failed";
+    }
+
+    @DeleteMapping("/deleteuser/{id}")
+    public String hardDeleteUser(@PathVariable String id) {
+
+        repository.deleteUserById(id);
+
+        JSONObject jSONObject1 = new JSONObject();
+
+        jSONObject1.put("status", "true");
+        jSONObject1.put("description", "delete succefully");
+
+        return jSONObject1.toJSONString();
+
+    }
+
+    @GetMapping("/gettrainerbootcamp/{id}")
+    @ApiOperation(value = "Get Bootcamp by Trainer")
+    public String getTrainerBootcampList(@PathVariable String id) {
+
+        JSONArray jsona = new JSONArray();
+        JSONObject jsono = new JSONObject();
+
+        List<Bootcamp> bootcamp = bootcampRepository.getBootcamp(id);
+
+        if (bootcamp == null) {
+            JSONObject jSONObject1 = new JSONObject();
+
+            jSONObject1.put("status", "false");
+            jSONObject1.put("description", "trainer not found");
+            return jSONObject1.toString();
+
+        }
+
+        for (Bootcamp b : bootcamp) {
+
+            JSONObject jSONObject1 = new JSONObject();
+            jSONObject1.put("bootcampId", b.getBootcampId());
+            jSONObject1.put("bootcampActive", b.getBootcampActive());
+            jSONObject1.put("bootcampLocation", b.getBootcampLocation());
+            jSONObject1.put("bootcampName", b.getBootcampName());
+
+            jsona.add(jSONObject1);
+        }
+        jsono.put("bootcampList", jsona);
+
+        return jsono.toString();
     }
 
     static String getAlphaNumericString(int n) {
@@ -484,6 +592,5 @@ public class UsersController {
         }
         return sb.toString();
     }
-
 
 }

@@ -58,7 +58,8 @@ public class AttendanceStatusController {
 
             jsonObject.put("attendanceStatusId", as.getAttendanceStatusId());
             jsonObject.put("attendanceStatusName", as.getAttendanceStatusName());
-
+            jsonObject.put("attendanceStatusActive", as.getAttendanceStatusActive());
+            
             jsonArray.add(jsonObject);
         }
 
@@ -82,7 +83,8 @@ public class AttendanceStatusController {
 
             jsonObject.put("attendanceStatusId", as.getAttendanceStatusId());
             jsonObject.put("attendanceStatusName", as.getAttendanceStatusName());
-
+            jsonObject.put("attendanceStatusActive", as.getAttendanceStatusActive());
+            
             jsonArray.add(jsonObject);
         }
 
@@ -114,7 +116,8 @@ public class AttendanceStatusController {
 
         jsonObject.put("attendanceStatusId", attendanceStatusOptional.get().getAttendanceStatusId());
         jsonObject.put("attendanceStatusName", attendanceStatusOptional.get().getAttendanceStatusName());
-
+        jsonObject.put("attendanceStatusActuve", attendanceStatusOptional.get().getAttendanceStatusActive());
+        
         jsonArray.add(jsonObject);
 
         jsonObject2.put("attendanceStatus", jsonArray);
@@ -163,7 +166,7 @@ public class AttendanceStatusController {
     }
     
      // CREATE
-    @PostMapping("/insertattendanceatatus")
+    @PostMapping("/insertattendancestatus")
     @ApiOperation(value = "${AttendanceStatusController.insert}")
     public String insertAttendance(@RequestBody AttendanceStatus attendanceStatus) {
         int beforeInsert = maxId();

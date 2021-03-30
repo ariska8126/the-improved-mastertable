@@ -55,7 +55,8 @@ public class ApprovalStatusController {
         for (ApprovalStatus a : ap) {
             JSONObject jSONObject = new JSONObject();
             jSONObject.put("approvalStatusId", a.getApprovalStatusId());
-            jSONObject.put("approvalStatusActive", a.getApprovalStatusName());
+            jSONObject.put("approvalStatusName", a.getApprovalStatusName());
+            jSONObject.put("approvalStatusActive", a.getApprovalStatusActive());
             jSONArray.add(jSONObject);
         }
         j.put("approvalStatusList", jSONArray);
@@ -79,6 +80,7 @@ public class ApprovalStatusController {
 
         jSONObject.put("approvalStatusId", app.get().getApprovalStatusId());
         jSONObject.put("approvalStatusName", app.get().getApprovalStatusName());
+        jSONObject.put("approvalStatusActive", app.get().getApprovalStatusName());
         jSONArray.add(jSONObject);
 
         jSONObject1.put("approvalStatus", jSONArray);
@@ -98,7 +100,7 @@ public class ApprovalStatusController {
 
         if (!appOptional.isPresent()) {
             jsonObject.put("status", "false");
-            jsonObject.put("description", "update successfully, ID Not Found");
+            jsonObject.put("description", "update unsuccessfully, ID Not Found");
 
             return jsonObject.toString();
         }
@@ -164,6 +166,7 @@ public class ApprovalStatusController {
             JSONObject jSONObject = new JSONObject();
             jSONObject.put("approvalStatusId", a.getApprovalStatusId());
             jSONObject.put("approvalStatusName", a.getApprovalStatusName());
+            jSONObject.put("approvalStatusActive", a.getApprovalStatusActive());
             jSONArray.add(jSONObject);
         }
         j.put("approvalStatusList", jSONArray);

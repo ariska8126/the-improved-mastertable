@@ -56,9 +56,10 @@ public class DivisionController {
             JSONObject jSONObject = new JSONObject();
             jSONObject.put("divisionId", div.getDivisionId());
             jSONObject.put("divisionName", div.getDivisionName());
+            jSONObject.put("divisionActive", div.getDivisionActive());
             jSONArray.add(jSONObject);
         }
-        j.put("division_list", jSONArray);
+        j.put("divisionList", jSONArray);
 
         return j.toString();
     }
@@ -77,6 +78,7 @@ public class DivisionController {
 
             jSONObject.put("divisionId", div.getDivisionId());
             jSONObject.put("divisionName", div.getDivisionName());
+            jSONObject.put("divisionActive", div.getDivisionActive());
 
             jSONArray.add(jSONObject);
         }
@@ -101,6 +103,8 @@ public class DivisionController {
 
         jSONObject.put("divisionId", division.get().getDivisionId());
         jSONObject.put("divisionName", division.get().getDivisionName());
+        jSONObject.put("divisionActive", division.get().getDivisionActive());
+        
 
         jSONArray.add(jSONObject);
 

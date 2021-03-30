@@ -32,7 +32,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Approval.findAll", query = "SELECT a FROM Approval a"),
     @NamedQuery(name = "Approval.findByApprovalId", query = "SELECT a FROM Approval a WHERE a.approvalId = :approvalId"),
     @NamedQuery(name = "Approval.findByApprovalDate", query = "SELECT a FROM Approval a WHERE a.approvalDate = :approvalDate"),
-    @NamedQuery(name = "Approval.findByApprovalDateUpdate", query = "SELECT a FROM Approval a WHERE a.approvalDateUpdate = :approvalDateUpdate")})
+    @NamedQuery(name = "Approval.findByApprovalDateUpdate", query = "SELECT a FROM Approval a WHERE a.approvalDateUpdate = :approvalDateUpdate"),
+    @NamedQuery(name = "Approval.findByApprovalDateStart", query = "SELECT a FROM Approval a WHERE a.approvalDateStart = :approvalDateStart"),
+    @NamedQuery(name = "Approval.findByApprovalDateEnd", query = "SELECT a FROM Approval a WHERE a.approvalDateEnd = :approvalDateEnd")})
 public class Approval implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,6 +54,14 @@ public class Approval implements Serializable {
     @Lob
     @Column(name = "approval_remark")
     private String approvalRemark;
+    @Basic(optional = false)
+    @Column(name = "approval_date_start")
+    @Temporal(TemporalType.DATE)
+    private Date approvalDateStart;
+    @Basic(optional = false)
+    @Column(name = "approval_date_end")
+    @Temporal(TemporalType.DATE)
+    private Date approvalDateEnd;
     @JoinColumn(name = "request_id", referencedColumnName = "request_id")
     @ManyToOne(optional = false)
     private Request requestId;
@@ -72,11 +82,13 @@ public class Approval implements Serializable {
         this.approvalId = approvalId;
     }
 
-    public Approval(String approvalId, Date approvalDate, Date approvalDateUpdate, String approvalRemark) {
+    public Approval(String approvalId, Date approvalDate, Date approvalDateUpdate, String approvalRemark, Date approvalDateStart, Date approvalDateEnd) {
         this.approvalId = approvalId;
         this.approvalDate = approvalDate;
         this.approvalDateUpdate = approvalDateUpdate;
         this.approvalRemark = approvalRemark;
+        this.approvalDateStart = approvalDateStart;
+        this.approvalDateEnd = approvalDateEnd;
     }
 
     public String getApprovalId() {
@@ -109,6 +121,22 @@ public class Approval implements Serializable {
 
     public void setApprovalRemark(String approvalRemark) {
         this.approvalRemark = approvalRemark;
+    }
+
+    public Date getApprovalDateStart() {
+        return approvalDateStart;
+    }
+
+    public void setApprovalDateStart(Date approvalDateStart) {
+        this.approvalDateStart = approvalDateStart;
+    }
+
+    public Date getApprovalDateEnd() {
+        return approvalDateEnd;
+    }
+
+    public void setApprovalDateEnd(Date approvalDateEnd) {
+        this.approvalDateEnd = approvalDateEnd;
     }
 
     public Request getRequestId() {

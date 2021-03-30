@@ -10,13 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author herli
  */
+@Transactional
+@Repository
 public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     //get user active = true
@@ -50,6 +55,11 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     //IF EXIST EMAIL
     @Query(value = "SELECT IF(EXISTS(SELECT * FROM users WHERE user_email = ?1),1,0)", nativeQuery = true)
     public int findIfExistEmail(@Param("mail") String mail);
+    
+    // HARD DELETE USER
+    @Modifying
+    @Query(value = "DELETE FROM users where users.user_id = :userId", nativeQuery = true)
+    int deleteUserById(@Param("userId") String id);
     
     
 }

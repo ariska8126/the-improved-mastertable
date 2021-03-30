@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author creative
  */
 @Entity
-@Table(name = "users", catalog = "hadir_db", schema = "")
+@Table(name = "users")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
@@ -42,10 +42,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Users.findByUserUnixcodeValue", query = "SELECT u FROM Users u WHERE u.userUnixcodeValue = :userUnixcodeValue"),
     @NamedQuery(name = "Users.findByUserUnixcodeDate", query = "SELECT u FROM Users u WHERE u.userUnixcodeDate = :userUnixcodeDate")})
 public class Users implements Serializable {
-
-    @Lob
-    @Column(name = "user_token")
-    private String userToken;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -75,6 +71,9 @@ public class Users implements Serializable {
     @Lob
     @Column(name = "user_photo")
     private String userPhoto;
+    @Lob
+    @Column(name = "user_token")
+    private String userToken;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<BootcampDetail> bootcampDetailList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "approvalRequesterId")
@@ -97,8 +96,6 @@ public class Users implements Serializable {
         this.userId = userId;
     }
     
-    //add new user 
-
     public Users(String userId, String userFullname, String userEmail, String userPassword, String userActive, String userUnixcodeValue, Date userUnixcodeDate, String userPhoto, Role roleId, Division divisionId) {
         this.userId = userId;
         this.userFullname = userFullname;
@@ -111,7 +108,6 @@ public class Users implements Serializable {
         this.roleId = roleId;
         this.divisionId = divisionId;
     }
-    
 
     public Users(String userId, String userFullname, String userEmail, String userPassword, String userActive, String userUnixcodeValue, Date userUnixcodeDate, String userPhoto) {
         this.userId = userId;
@@ -186,6 +182,14 @@ public class Users implements Serializable {
 
     public void setUserPhoto(String userPhoto) {
         this.userPhoto = userPhoto;
+    }
+
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 
     @XmlTransient
@@ -263,14 +267,6 @@ public class Users implements Serializable {
     @Override
     public String toString() {
         return "com.HadirApp.MasterManagement.entity.Users[ userId=" + userId + " ]";
-    }
-
-    public String getUserToken() {
-        return userToken;
-    }
-
-    public void setUserToken(String userToken) {
-        this.userToken = userToken;
     }
     
 }
