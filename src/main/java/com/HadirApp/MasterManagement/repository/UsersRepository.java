@@ -61,5 +61,11 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     @Query(value = "DELETE FROM users where users.user_id = :userId", nativeQuery = true)
     int deleteUserById(@Param("userId") String id);
     
+    //if exist token
+    @Query(value="SELECT IF(EXISTS(SELECT * FROM `users` WHERE user_token = ?1),1,0)",nativeQuery = true)
+    public int findIfExistToken(@Param ("token") String token);
     
+    //select user by token
+    @Query(value="SELECT * FROM `users` WHERE user_token = ?1",nativeQuery = true)
+    public Users findUserByToken(@Param ("token") String token);
 }
