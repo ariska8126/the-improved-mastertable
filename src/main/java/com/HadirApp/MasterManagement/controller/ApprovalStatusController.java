@@ -6,6 +6,7 @@
 package com.HadirApp.MasterManagement.controller;
 
 import com.HadirApp.MasterManagement.entity.ApprovalStatus;
+import com.HadirApp.MasterManagement.entity.Users;
 import com.HadirApp.MasterManagement.repository.ApprovalStatusRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -46,11 +48,46 @@ public class ApprovalStatusController {
     //read all where 
     @GetMapping("/getactiveapprovalstatus")
     @ApiOperation(value = "${ApprovalStatusController.getactiveapprovalstatus}")
-    public String getActiveApprovalStatus() {
-        List<ApprovalStatus> ap = repository.getActiveApprovalStatus();
+    public String getActiveApprovalStatus(@RequestHeader("bearer") String header) {
 
+        System.out.println("===== Request /getactiveapprovalstatus in Master Management =====");
         JSONArray jSONArray = new JSONArray();
         JSONObject j = new JSONObject();
+        int tokenExist = repository.findIfExistToken(header);
+
+        if (tokenExist == 1) {
+            System.out.println("===== Token is Exist =====");
+            // get current date and userId
+            Optional<Users> userIdObj = repository.getUsersByToken(header);
+            String userId = userIdObj.get().getUserId();
+            // get user role
+            String userRole = repository.getUsersRole(userId);
+
+            System.out.println("===== User Details =====");
+            System.out.println("User Id : " + userId);
+            System.out.println("User Role : " + userRole);
+
+            // Check role
+            if (userRole.equals("admin")) {
+
+            } else {
+                System.out.println("===== Access Denied =====");
+                System.out.println("User Role : " + userRole);
+
+                j.put("status", "false");
+                j.put("description", "Access denied");
+                j.put("roleName", userRole);
+                return j.toJSONString();
+            }
+        } else {
+            System.out.println("===== Wrong/Expire Token =====");
+            j.put("status", "false");
+            j.put("description", "you don't have authorization to access");
+            return j.toJSONString();
+        }
+
+        // ACTION
+        List<ApprovalStatus> ap = repository.getActiveApprovalStatus();
 
         for (ApprovalStatus a : ap) {
             JSONObject jSONObject = new JSONObject();
@@ -62,116 +99,199 @@ public class ApprovalStatusController {
         j.put("approvalStatusList", jSONArray);
 
         return j.toString();
+        // END ACTION
+
     }
 
     //read by id
     @GetMapping("/getapprovalstatus/{id}")
     @ApiOperation(value = "${ApprovalStatusController.getapprovalstatusbyid}")
-    public String getApprovalStatusByID(@PathVariable int id) {
+    public String getApprovalStatusByID(@RequestHeader("bearer") String header, @PathVariable int id) {
 
-        Optional<ApprovalStatus> app = repository.findById(id);
-        if (!app.isPresent()) {
-            System.out.println("approval status not found");
-        }
-
+        System.out.println("===== Request /getactiveapprovalstatus/{id} in Master Management =====");
         JSONArray jSONArray = new JSONArray();
         JSONObject jSONObject = new JSONObject();
         JSONObject jSONObject1 = new JSONObject();
 
-        jSONObject.put("approvalStatusId", app.get().getApprovalStatusId());
-        jSONObject.put("approvalStatusName", app.get().getApprovalStatusName());
-        jSONObject.put("approvalStatusActive", app.get().getApprovalStatusName());
-        jSONArray.add(jSONObject);
+        int tokenExist = repository.findIfExistToken(header);
 
-        jSONObject1.put("approvalStatus", jSONArray);
+        if (tokenExist == 1) {
+            System.out.println("===== Token is Exist =====");
+            // get current date and userId
+            Optional<Users> userIdObj = repository.getUsersByToken(header);
+            String userId = userIdObj.get().getUserId();
+            // get user role
+            String userRole = repository.getUsersRole(userId);
 
-        return jSONObject1.toString();
+            System.out.println("===== User Details =====");
+            System.out.println("User Id : " + userId);
+            System.out.println("User Role : " + userRole);
+
+            // Check role
+            if (userRole.equals("admin")) {
+                // ACTION
+                Optional<ApprovalStatus> app = repository.findById(id);
+                if (!app.isPresent()) {
+                    System.out.println("approval status not found");
+                }
+                jSONObject.put("approvalStatusId", app.get().getApprovalStatusId());
+                jSONObject.put("approvalStatusName", app.get().getApprovalStatusName());
+                jSONObject.put("approvalStatusActive", app.get().getApprovalStatusActive());
+                jSONArray.add(jSONObject);
+
+                jSONObject1.put("approvalStatus", jSONArray);
+
+                return jSONObject1.toString();
+                // END ACTION
+            } else {
+                System.out.println("===== Access Denied =====");
+                System.out.println("User Role : " + userRole);
+
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "Access denied");
+                jSONObject.put("roleName", userRole);
+                return jSONObject.toJSONString();
+            }
+        } else {
+            System.out.println("===== Wrong/Expire Token =====");
+            jSONObject.put("status", "false");
+            jSONObject.put("description", "you don't have authorization to access");
+            return jSONObject.toJSONString();
+        }
 
     }
 
     //update
     @PutMapping("/updateapprovalstatus/{id}")
     @ApiOperation(value = "${ApprovalStatusController.update}")
-    public String updateApprovalStatus(@RequestBody ApprovalStatus appstatus, @PathVariable int id) {
+    public String updateApprovalStatus(@RequestHeader("bearer") String header, @RequestBody ApprovalStatus appstatus, @PathVariable int id) {
 
-        JSONObject jsonObject = new JSONObject();
+        System.out.println("===== Request /getactiveapprovalstatus/{id} in Master Management =====");
+        JSONArray jSONArray = new JSONArray();
+        JSONObject jSONObject = new JSONObject();
+        JSONObject jSONObject1 = new JSONObject();
 
-        Optional<ApprovalStatus> appOptional = repository.findById(id);
+        int tokenExist = repository.findIfExistToken(header);
 
-        if (!appOptional.isPresent()) {
-            jsonObject.put("status", "false");
-            jsonObject.put("description", "update unsuccessfully, ID Not Found");
+        if (tokenExist == 1) {
+            System.out.println("===== Token is Exist =====");
+            // get current date and userId
+            Optional<Users> userIdObj = repository.getUsersByToken(header);
+            String userId = userIdObj.get().getUserId();
+            // get user role
+            String userRole = repository.getUsersRole(userId);
 
-            return jsonObject.toString();
-        }
-        String name = appOptional.get().getApprovalStatusName();
-        String active = appOptional.get().getApprovalStatusName();
+            System.out.println("===== User Details =====");
+            System.out.println("User Id : " + userId);
+            System.out.println("User Role : " + userRole);
 
-        appstatus.setApprovalStatusId(id);
-        repository.save(appstatus);
+            // Check role
+            if (userRole.equals("admin")) {
+                // ACTION
+                Optional<ApprovalStatus> appOptional = repository.findById(id);
 
-        String nameUpdate = appOptional.get().getApprovalStatusName();
-        String activeUpdate = appOptional.get().getApprovalStatusName();
+                if (!appOptional.isPresent()) {
+                    jSONObject.put("status", "false");
+                    jSONObject.put("description", "update unsuccessfully, ID Not Found");
 
-        if (name.equals(nameUpdate) && active.equals(activeUpdate)) {
-            jsonObject.put("status", "true");
-            jsonObject.put("description", "there is no data udated");
+                    return jSONObject.toString();
+                }
+                String name = appOptional.get().getApprovalStatusName();
+                String active = appOptional.get().getApprovalStatusName();
 
-            return jsonObject.toString();
+                appstatus.setApprovalStatusId(id);
+                repository.save(appstatus);
+
+                String nameUpdate = appOptional.get().getApprovalStatusName();
+                String activeUpdate = appOptional.get().getApprovalStatusName();
+
+                if (name.equals(nameUpdate) && active.equals(activeUpdate)) {
+                    jSONObject.put("status", "true");
+                    jSONObject.put("description", "there is no data udated");
+
+                    return jSONObject.toString();
+                } else {
+                    jSONObject.put("status", "true");
+                    jSONObject.put("description", "update successfully");
+
+                    return jSONObject.toString();
+                }
+                // END ACTION
+            } else {
+                System.out.println("===== Access Denied =====");
+                System.out.println("User Role : " + userRole);
+
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "Access denied");
+                jSONObject.put("roleName", userRole);
+                return jSONObject.toJSONString();
+            }
         } else {
-            jsonObject.put("status", "true");
-            jsonObject.put("description", "update successfully");
-
-            return jsonObject.toString();
+            System.out.println("===== Wrong/Expire Token =====");
+            jSONObject.put("status", "false");
+            jSONObject.put("description", "you don't have authorization to access");
+            return jSONObject.toJSONString();
         }
+
     }
 
     //create
     @PostMapping("/insertapprovalstatus")
     @ApiOperation(value = "${ApprovalStatusController.insert}")
-    public String insertApprovalStatus(@RequestBody ApprovalStatus approvalStatus) {
-        int beforeInsert = maxApprovalStatus();
-        ApprovalStatus saveapprovalStatus = repository.save(approvalStatus);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}")
-                .buildAndExpand(saveapprovalStatus.getApprovalStatusId()).toUri();
-        int afterInsert = maxApprovalStatus();
-
-        JSONObject jSONObject = new JSONObject();
-
-        if (afterInsert > beforeInsert) {
-            jSONObject.put("status", "true");
-            jSONObject.put("description", "insert successfully");
-
-        } else {
-            jSONObject.put("status", "false");
-            jSONObject.put("description", "insert unsuccessfully");
-
-        }
-
-        return jSONObject.toString();
-    }
-
-    //read
-    @GetMapping("/getapprovalstatus")
-    @ApiOperation(value = "${ApprovalStatusController.getapprovalstatus}")
-    public String getAllApprovalStatus() {
-
-        List<ApprovalStatus> app = repository.findAll();
-
+    public String insertApprovalStatus(@RequestHeader("bearer") String header, @RequestBody ApprovalStatus approvalStatus) {
+        System.out.println("===== Request /getactiveapprovalstatus/{id} in Master Management =====");
         JSONArray jSONArray = new JSONArray();
-        JSONObject j = new JSONObject();
+        JSONObject jSONObject = new JSONObject();
+        JSONObject jSONObject1 = new JSONObject();
 
-        for (ApprovalStatus a : app) {
-            JSONObject jSONObject = new JSONObject();
-            jSONObject.put("approvalStatusId", a.getApprovalStatusId());
-            jSONObject.put("approvalStatusName", a.getApprovalStatusName());
-            jSONObject.put("approvalStatusActive", a.getApprovalStatusActive());
-            jSONArray.add(jSONObject);
+        int tokenExist = repository.findIfExistToken(header);
+
+        if (tokenExist == 1) {
+            System.out.println("===== Token is Exist =====");
+            // get current date and userId
+            Optional<Users> userIdObj = repository.getUsersByToken(header);
+            String userId = userIdObj.get().getUserId();
+            // get user role
+            String userRole = repository.getUsersRole(userId);
+
+            System.out.println("===== User Details =====");
+            System.out.println("User Id : " + userId);
+            System.out.println("User Role : " + userRole);
+
+            // Check role
+            if (userRole.equals("admin")) {
+                // ACTION
+                int beforeInsert = maxApprovalStatus();
+                ApprovalStatus saveapprovalStatus = repository.save(approvalStatus);
+
+                URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}")
+                        .buildAndExpand(saveapprovalStatus.getApprovalStatusId()).toUri();
+                int afterInsert = maxApprovalStatus();
+
+                if (afterInsert > beforeInsert) {
+                    jSONObject.put("status", "true");
+                    jSONObject.put("description", "insert successfully");
+
+                } else {
+                    jSONObject.put("status", "false");
+                    jSONObject.put("description", "insert unsuccessfully");
+                }
+                return jSONObject.toString();
+                // END ACTION
+            } else {
+                System.out.println("===== Access Denied =====");
+                System.out.println("User Role : " + userRole);
+
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "Access denied");
+                jSONObject.put("roleName", userRole);
+                return jSONObject.toJSONString();
+            }
+        } else {
+            System.out.println("===== Wrong/Expire Token =====");
+            jSONObject.put("status", "false");
+            jSONObject.put("description", "you don't have authorization to access");
+            return jSONObject.toJSONString();
         }
-        j.put("approvalStatusList", jSONArray);
-
-        return j.toString();
     }
-
 }

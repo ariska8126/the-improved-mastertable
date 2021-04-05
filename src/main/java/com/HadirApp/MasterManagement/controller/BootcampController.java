@@ -45,7 +45,7 @@ public class BootcampController {
 
         return maxId;
     }
-    
+
     static String getNumericString(int n) {
 
         String NumericString = "0123456789";
@@ -138,33 +138,65 @@ public class BootcampController {
         jsonObject.put("bootcampId", bootcamp.get().getBootcampId());
         jsonObject.put("bootcampName", bootcamp.get().getBootcampName());
         jsonObject.put("bootcampLocation", bootcamp.get().getBootcampLocation());
-        jsonObject.put("bootcamoActive", bootcamp.get().getBootcampActive());
+        jsonObject.put("bootcampActive", bootcamp.get().getBootcampActive());
         jsonObject2.put("bootcamp", jsonArray);
 
         return jsonObject.toString();
     }
-    
+
+    @GetMapping("/getbootcampbyuserid/{id}")
+    @ApiOperation(value = "Get bootcamp by User Id")
+    public String getBootcampByUserId(@PathVariable String id) {
+        Iterable<Bootcamp> bootcamp = bootcampRepository.getBootcampByUser(id);
+
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject2 = new JSONObject();
+
+        if (jsonArray == null) {
+            jsonObject2.put("description", "data not found");
+            jsonObject2.put("status", "false");
+            jsonArray.add(jsonObject2);
+
+            jsonObject2.put("bootcamp", jsonArray);
+
+            return jsonObject2.toString();
+        } else {
+            for (Bootcamp bl : bootcamp) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("bootcampId", bl.getBootcampId());
+                jsonObject.put("bootcampName", bl.getBootcampName());
+                jsonObject.put("bootcampLocation", bl.getBootcampLocation());
+                jsonObject.put("bootcampActive", bl.getBootcampActive());
+                jsonArray.add(jsonObject);
+            }
+
+            jsonObject2.put("bootcampList", jsonArray);
+
+            return jsonObject2.toString();
+        }
+    }
+
     // UPDATE AND SOFT DELETE
     @PutMapping("/update/{id}")
     @ApiOperation(value = "${BootcampController.update}")
     public String updateBootcamp(@RequestBody Bootcamp bootcamp, @PathVariable String id) {
-        
+
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObject2 = new JSONObject();
-        
+
         Optional<Bootcamp> bootcampOptional = bootcampRepository.findById(id);
         if (!bootcampOptional.isPresent()) {
             return "fail";
         }
-        
+
         String name = bootcampOptional.get().getBootcampName();
         String active = bootcampOptional.get().getBootcampActive();
         String location = bootcampOptional.get().getBootcampLocation();
-        
+
         bootcamp.setBootcampId(id);
         bootcampRepository.save(bootcamp);
-        
+
         String nameUpdate = bootcampOptional.get().getBootcampName();
         String activeUpdate = bootcampOptional.get().getBootcampActive();
         String locationUpdate = bootcampOptional.get().getBootcampLocation();
@@ -186,20 +218,20 @@ public class BootcampController {
             return jsonObject.toString();
         }
     }
-    
+
     // CREATE
     @PostMapping("/insert")
     @ApiOperation(value = "${BootcampController.insert}")
     public String insertBootcamp(@RequestBody Bootcamp bootcamp) {
         int beforeInsert = maxId();
-        
+
         // Generate bootcamp id
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
         Date date = new Date();
         String currentYear = formatter.format(date);
         String randomNumber = getNumericString(4);
-        String idBootcamp = currentYear+randomNumber;
-        
+        String idBootcamp = currentYear + randomNumber;
+
         bootcamp.setBootcampId(idBootcamp);
         Bootcamp savedBL = bootcampRepository.save(bootcamp);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}")
@@ -214,7 +246,7 @@ public class BootcampController {
             jsonObject.put("status", "true");
             jsonObject.put("description", "insert successfully");
             jsonArray.add(jsonObject);
-        } else{
+        } else {
             jsonObject.put("status", "false");
             jsonObject.put("description", "insert unsuccessfully");
             jsonArray.add(jsonObject);

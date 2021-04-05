@@ -5,6 +5,7 @@
  */
 package com.HadirApp.MasterManagement.repository;
 
+import com.HadirApp.MasterManagement.entity.Attendance;
 import com.HadirApp.MasterManagement.entity.Users;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,5 +62,13 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     @Query(value = "DELETE FROM users where users.user_id = :userId", nativeQuery = true)
     int deleteUserById(@Param("userId") String id);
     
+    // Get Bootcamp and Trainner
+    @Query(value = "select attendance.* from attendance join users on attendance.user_id = users.user_id join bootcamp_detail on bootcamp_detail.user_id = users.user_id where bootcamp_detail.bootcamp_id in (:bootcampId)", nativeQuery = true)
+    Iterable<Attendance> getAttendanceByBootcamp(@Param("bootcampId") String bootcampId);
+    
+    // Delete assign 
+    @Modifying
+    @Query(value = "DELETE from bootcamp_detail WHERE bootcamp_detail.bootcamp_detail_id = :userId", nativeQuery = true)
+    int deleteTrainnerInBootcamp(@Param("userId") String id);
     
 }
