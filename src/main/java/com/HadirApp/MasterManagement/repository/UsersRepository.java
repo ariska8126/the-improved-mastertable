@@ -68,4 +68,8 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     //select user by token
     @Query(value="SELECT * FROM `users` WHERE user_token = ?1",nativeQuery = true)
     public Users findUserByToken(@Param ("token") String token);
+    
+    //select bootcamp id trainer
+    @Query(value="", nativeQuery = true)
+    public String findBootcampidByUserId(@Param ("id") String id);
 }
