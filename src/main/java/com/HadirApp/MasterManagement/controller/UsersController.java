@@ -112,6 +112,34 @@ public class UsersController {
 
         return jsono.toString();
     }
+    
+    @GetMapping("/gettrainerandemployee")
+    @ApiOperation(value = "Get all trainner and employee")
+    public String getTrainnerAndEmployee(){
+        JSONArray jsona = new JSONArray();
+        JSONObject jsono = new JSONObject();
+        
+        Iterable<Users> users = repository.getTrainerAndEmployee();
+        for (Users u : users) {
+
+            JSONObject jSONObject1 = new JSONObject();
+            jSONObject1.put("userId", u.getUserId());
+            jSONObject1.put("userFullname", u.getUserFullname());
+            jSONObject1.put("userEmail", u.getUserEmail());
+            jSONObject1.put("userPhoto", u.getUserPhoto());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
+            jSONObject1.put("roleName", u.getRoleId().getRoleName());
+            jSONObject1.put("userActive", u.getUserActive());
+
+            jsona.add(jSONObject1);
+        }
+        jsono.put("userList", jsona);
+
+        return jsono.toString();
+        
+    }
 
     @GetMapping("/getalltrainer")
     @ApiOperation(value = "${UsersController.getalltrainer}")
@@ -268,6 +296,71 @@ public class UsersController {
         return jsono.toString();
     }
 
+    @GetMapping("/getuserexpectadmin")
+    @ApiOperation(value = "Get all users expect admin")
+    public String getUsersExpectAdmin() {
+        List<Users> users = repository.getActiveUsersExpectAdmin();
+        JSONArray jsona = new JSONArray();
+        JSONObject jsono = new JSONObject();
+
+        for (Users u : users) {
+
+            JSONObject jSONObject1 = new JSONObject();
+            jSONObject1.put("userId", u.getUserId());
+            jSONObject1.put("userFullname", u.getUserFullname());
+            jSONObject1.put("userEmail", u.getUserEmail());
+            jSONObject1.put("userPhoto", u.getUserPhoto());
+            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
+            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+            jSONObject1.put("roleId", u.getRoleId().getRoleId());
+            jSONObject1.put("roleName", u.getRoleId().getRoleName());
+            jSONObject1.put("userActive", u.getUserActive());
+
+            jsona.add(jSONObject1);
+        }
+        jsono.put("userActiveList", jsona);
+
+        return jsono.toString();
+    }
+
+    @GetMapping("/getemployeebytrainerbootcamp/{id}")
+    @ApiOperation(value = "Get all employee related with trainner")
+    public String getEmployeeByTrainner(@PathVariable String id) {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+
+        List<Bootcamp> bootcamp = bootcampRepository.getBootcamp(id);
+        List<String> data = new ArrayList<String>();
+
+        for (int i = 0; i < bootcamp.size(); i++) {
+            data.add(bootcamp.get(i).getBootcampId());
+            Iterable<Users> userByBootcamp = repository.getUserByBootcampTrainner(data.get(i));
+
+            for (Users userData : userByBootcamp) {
+                JSONObject jSONObject1 = new JSONObject();
+                jSONObject1.put("userId", userData.getUserId());
+                jSONObject1.put("userFullname", userData.getUserFullname());
+                jSONObject1.put("userEmail", userData.getUserEmail());
+                jSONObject1.put("userPhoto", userData.getUserPhoto());
+                jSONObject1.put("divisionId", userData.getDivisionId().getDivisionId());
+                jSONObject1.put("divisionName", userData.getDivisionId().getDivisionName());
+                jSONObject1.put("roleId", userData.getRoleId().getRoleId());
+                jSONObject1.put("roleName", userData.getRoleId().getRoleName());
+                jSONObject1.put("userActive", userData.getUserActive());
+
+                jsonArray.add(jSONObject1);
+            }
+            jsonObject.put("userList", jsonArray);
+
+            return jsonObject.toString();
+        }
+        
+        jsonObject.put("status", "false");
+        jsonObject.put("description", "data not found");
+
+        return jsonObject.toJSONString();
+    }
+
     @GetMapping("/getuser/{id}")
     @ApiOperation(value = "${UsersController.getuserbyid}")
     public String getUserByID(@PathVariable String id) {
@@ -295,11 +388,26 @@ public class UsersController {
         jsono.put("userList", jsona);
         return jsono.toString();
     }
+    
+    @PutMapping("/updatephoto/{id}")
+    @ApiOperation(value = "Udate users photo")
+    public String updatePhoto(@RequestBody Map<String, ?> input, @PathVariable String id){
+        String userPhoto = (String) input.get("userPhoto");
+        
+        repository.updateUserPhoto(userPhoto, id);
+        
+       JSONObject jSONObject1 = new JSONObject();
+
+        jSONObject1.put("status", "true");
+        jSONObject1.put("description", "update succefully");
+
+        return jSONObject1.toJSONString(); 
+    }
 
     @PutMapping("/update/{id}")
     @ApiOperation(value = "${UsersController.updatebyid}")
     public String updateUser(@RequestBody Map<String, ?> input, @PathVariable String id) {
-
+        
         JSONObject jSONObject = new JSONObject();
 
         Iterable<Users> userlist = repository.getUsersListByID(id);
@@ -490,7 +598,7 @@ public class UsersController {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         Date date = new Date();
         String currentDate = formatter.format(date);
-        String bootcampDetailId = newID + currentDate;
+        String bootcampDetailId = newID + bootcampIds;
 
         // Save Emplolee 
         Users users = new Users(userId, userFullname, userEmail, userPassword,
@@ -553,7 +661,7 @@ public class UsersController {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
             Date date = new Date();
             String currentDate = formatter.format(date);
-            String bootcampDetailId = newID + currentDate;
+            String bootcampDetailId = newID + bootcampId;
 
             // Save Bootcamp Detail
             BootcampDetail bootcampDetail = new BootcampDetail(bootcampDetailId, new Users(userId), new Bootcamp(bootcampId));
@@ -569,8 +677,6 @@ public class UsersController {
             return jsonObject.toJSONString();
         }
     }
-    
-    
 
     @PutMapping("/changepassword/{id}")
     @ApiOperation(value = "${UsersController.changepassword}")
@@ -633,20 +739,20 @@ public class UsersController {
         return jSONObject1.toJSONString();
 
     }
-    
+
     @DeleteMapping("/cancelassign/{id}")
     @ApiOperation(value = "Cancel Assign Trainner")
-    public String cancelAssignTrainer(@PathVariable String id){
-        
+    public String cancelAssignTrainer(@PathVariable String id) {
+
         repository.deleteTrainnerInBootcamp(id);
-        
+
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "true");
         jSONObject1.put("description", "trainner removed");
 
         return jSONObject1.toJSONString();
-        
+
     }
 
     @GetMapping("/gettrainerbootcamp/{id}")
@@ -697,7 +803,7 @@ public class UsersController {
 
             for (Attendance attendance : attendanceByBootcamp) {
                 JSONObject jsonObject = new JSONObject();
-                
+
                 jsonObject.put("attendanceId", attendance.getAttendanceId());
                 jsonObject.put("attendanceDate", attendance.getAttendanceDate().toString());
                 jsonObject.put("attendanceTime", attendance.getAttendanceTime().toString());
@@ -713,7 +819,7 @@ public class UsersController {
 
                 jsonArray.add(jsonObject);
             }
-            
+
             jsonObject1.put("attendanceList", jsonArray);
 
             return jsonObject1.toString();

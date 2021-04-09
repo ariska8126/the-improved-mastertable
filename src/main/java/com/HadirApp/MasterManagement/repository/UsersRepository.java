@@ -24,10 +24,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Repository
 public interface UsersRepository extends JpaRepository<Users, Integer> {
-
+    @Query(value = "SELECT * FROM users WHERE role_id in (4,5) and user_active = 'true'", nativeQuery = true)
+    Iterable<Users> getTrainerAndEmployee();
+    
     //get user active = true
     @Query(value = "SELECT * FROM users WHERE user_active = 'true'", nativeQuery = true)
     List<Users> getActiveUsers();
+    
+    @Query(value = "SELECT * FROM users WHERE user_active = 'true' and role_id <> 1", nativeQuery = true)
+    List<Users> getActiveUsersExpectAdmin();
     
     //get user by role & status is active
     @Query(value = "SELECT * FROM users u JOIN role r ON u.role_id = r.role_id WHERE r.role_name LIKE ?1 AND u.user_active = 'true'", nativeQuery = true)
@@ -70,5 +75,13 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     @Modifying
     @Query(value = "DELETE from bootcamp_detail WHERE bootcamp_detail.bootcamp_detail_id = :userId", nativeQuery = true)
     int deleteTrainnerInBootcamp(@Param("userId") String id);
+    
+    // Get Bootcamp and Trainner
+    @Query(value = "select users.* from  users join bootcamp_detail on bootcamp_detail.user_id = users.user_id where users.role_id = 5 and bootcamp_detail.bootcamp_id in (:bootcampId)", nativeQuery = true)
+    Iterable<Users> getUserByBootcampTrainner(@Param("bootcampId") String bootcampId);
+    
+    @Modifying
+    @Query(value = "UPDATE users set user_photo = :userPhoto where user_id = :userId", nativeQuery = true)
+    int updateUserPhoto(@Param("userPhoto") String userPhoto, @Param("userId") String userId);
     
 }

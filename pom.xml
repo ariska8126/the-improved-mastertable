@@ -10,10 +10,10 @@
     </parent>
     <groupId>com.HadirApp</groupId>
     <artifactId>MasterManagement</artifactId>
-    <packaging>jar</packaging>
+    <!--<packaging>jar</packaging>-->
     <version>0.0.1-SNAPSHOT</version>
     <!-- build war -->
-    <!--<packaging>war</packaging>-->
+    <packaging>war</packaging>
     <name>HadirAppMasterManagementAPI</name>
     <description>API for master table CRUD</description>
     <properties>
@@ -109,7 +109,7 @@
     </dependencies>
 
     <build>
-        <finalName>${artifactId}</finalName>
+        <finalName>hadirmaster</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
