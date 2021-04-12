@@ -777,28 +777,7 @@ public class UsersController {
                 //mail
 
                 return jSONObject1.toString();
-        //send mail
-        String sbj = "Metrodata Coding Camp New User";
-        String title = "Welcome Aboard!";
-//        String content = "Username: " + userEmail + ",\n Password: "+dummyPassword;
-        String login = "https://www.instagram.com/";
-        String content = "please change your password immediately!";
-        String welcome = "We are gladly happy for accepting you as our new family in Metrodata Coding Camp, congratulation! Before you join with us, we will introduce you to our presence system called HadirApp. HadirApp will help us to know about attendance, here your email and password for your login requirement.";
-
-        System.out.println("send mail running");
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("title", title);
-        model.put("name", userFullname);
-        model.put("username", userEmail);
-        model.put("password", dummyPassword);
-        model.put("message", content);
-        model.put("welcome", welcome);
-        model.put("login", login);
-
-//        model.put("login", login);
-        springMailServices.sendMail(model, sbj, userEmail);
-        System.out.println("mail sent");
+        
         //mail
             } else {
                 System.out.println("access denied");

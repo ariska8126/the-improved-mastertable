@@ -63,7 +63,7 @@ public class ApprovalStatusController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId != 0) {
                 System.out.println("you're authorized to access this operation");
 
                 List<ApprovalStatus> ap = repository.getActiveApprovalStatus();
@@ -110,7 +110,7 @@ public class ApprovalStatusController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId != 0) {
                 System.out.println("you're authorized to access this operation");
 
                 Optional<ApprovalStatus> app = repository.findById(id);
@@ -161,7 +161,7 @@ public class ApprovalStatusController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId != 0) {
                 System.out.println("you're authorized to access this operation");
 
                 JSONObject jsonObject = new JSONObject();
@@ -224,7 +224,7 @@ public class ApprovalStatusController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId != 0) {
                 System.out.println("you're authorized to access this operation");
 
                 int beforeInsert = maxApprovalStatus();
@@ -274,7 +274,7 @@ public class ApprovalStatusController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId != 0) {
                 System.out.println("you're authorized to access this operation");
 
                 List<ApprovalStatus> app = repository.findAll();

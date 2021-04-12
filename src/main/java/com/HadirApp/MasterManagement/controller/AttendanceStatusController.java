@@ -78,7 +78,7 @@ public class AttendanceStatusController {
                     jsonObject.put("attendanceStatusName", as.getAttendanceStatusName());
                     jsonObject.put("attendanceStatusActive", as.getAttendanceStatusActive());
 
-                    jsonArray.add(jsonObject);
+                    jsonArray.add(jsonObject); 
                 }
 
                 jsonObject2.put("attendanceStatusList", jsonArray);
@@ -108,12 +108,12 @@ public class AttendanceStatusController {
         int cekIfExistToken = userRepository.findIfExistToken(header);
         System.out.println("exist token: " + cekIfExistToken);
 
-        if (cekIfExistToken == 1) {
+        if (cekIfExistToken == 1 ) {
             Users user = userRepository.findUserByToken(header);
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId != 0) {
                 System.out.println("you're authorized to access this operation");
 
                 List<AttendanceStatus> attendanceStatus = attendanceStatusRepository.getActiveAttendance();
