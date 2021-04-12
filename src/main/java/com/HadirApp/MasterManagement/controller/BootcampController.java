@@ -87,6 +87,7 @@ public class BootcampController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
+
             if (roleId != 5) {
                 System.out.println("you're authorized to access this operation");
 
@@ -119,9 +120,9 @@ public class BootcampController {
         jSONObject.put("status", "false");
         jSONObject.put("description", "your token didn't authorized to access");
 
+
         return jSONObject.toJSONString();
     }
-
     // Read all where status = true
     @GetMapping("/getactivebootcamp")
     @ApiOperation(value = "${BootcampController.getactivebootcamp}")

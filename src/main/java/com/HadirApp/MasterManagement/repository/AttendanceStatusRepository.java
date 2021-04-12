@@ -18,10 +18,11 @@ import org.springframework.data.repository.query.Param;
  *
  * @author creative
  */
-public interface AttendanceStatusRepository extends JpaRepository<AttendanceStatus, Integer>{
+public interface AttendanceStatusRepository extends JpaRepository<AttendanceStatus, Integer> {
+
     @Query(value = "SELECT * FROM attendance_status where attendance_status.attendance_status_active = 'true'", nativeQuery = true)
-    List <AttendanceStatus> getActiveAttendance();
-    
+    List<AttendanceStatus> getActiveAttendance();
+
     @Query(value = "SELECT count(*) from attendance_status", nativeQuery = true)
     public String getMaxAttendance();
     

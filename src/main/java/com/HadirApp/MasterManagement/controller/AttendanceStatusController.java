@@ -183,6 +183,7 @@ public class AttendanceStatusController {
                     return jsonObject.toString();
                 }
 
+
                 jsonObject.put("attendanceStatusId", attendanceStatusOptional.get().getAttendanceStatusId());
                 jsonObject.put("attendanceStatusName", attendanceStatusOptional.get().getAttendanceStatusName());
                 jsonObject.put("attendanceStatusActuve", attendanceStatusOptional.get().getAttendanceStatusActive());
@@ -197,7 +198,6 @@ public class AttendanceStatusController {
                 System.out.println("access denied");
                 jSONObject.put("status", "false");
                 jSONObject.put("description", "you don't have authorization to access");
-
                 return jSONObject.toJSONString();
             }
         }

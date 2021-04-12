@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
  *
@@ -61,56 +62,106 @@ public class UsersController {
 
     @GetMapping("/getuser")
     @ApiOperation(value = "${UsersController.getuser}")
-    public String getAllUser() {
-        List<Users> users = repository.findAll();
+    public String getAllUser(@RequestHeader("bearer") String header) {
+
         JSONArray jSONArray = new JSONArray();
         JSONObject jSONObject = new JSONObject();
-        for (Users u : users) {
-            JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("userId", u.getUserId());
-            jSONObject1.put("userFullname", u.getUserFullname());
-            jSONObject1.put("userEmail", u.getUserEmail());
-            jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
-            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleId", u.getRoleId().getRoleId());
-            jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("userActive", u.getUserActive());
-            jSONArray.add(jSONObject1);
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
+
+        if (cekIfExistToken == 1) {
+            Users user = repository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleId = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+            if (roleId == 1) {
+                System.out.println("you're authorized to access this operation");
+
+                List<Users> users = repository.findAll();
+
+                for (Users u : users) {
+                    JSONObject jSONObject1 = new JSONObject();
+                    jSONObject1.put("userId", u.getUserId());
+                    jSONObject1.put("userFullname", u.getUserFullname());
+                    jSONObject1.put("userEmail", u.getUserEmail());
+                    jSONObject1.put("userPhoto", u.getUserPhoto());
+                    jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
+                    jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+                    jSONObject1.put("roleId", u.getRoleId().getRoleId());
+                    jSONObject1.put("roleName", u.getRoleId().getRoleName());
+                    jSONObject1.put("userActive", u.getUserActive());
+                    jSONArray.add(jSONObject1);
+                }
+                jSONObject.put("userList", jSONArray);
+                return jSONObject.toString();
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
         }
-        jSONObject.put("userList", jSONArray);
-        return jSONObject.toString();
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
+
+        return jSONObject.toJSONString();
     }
 
     @GetMapping("/getallemployee")
     @ApiOperation(value = "${UsersController.getallemployee}")
-    public String getAllEmployee() {
+    public String getAllEmployee(@RequestHeader("bearer") String header) {
 
-        String role = "employee";
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jsono = new JSONObject();
+        if (cekIfExistToken == 1) {
+            Users user = repository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleId = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+            if (roleId == 1 || roleId == 2 || roleId == 3 || roleId == 4) {
+                System.out.println("you're authorized to access this operation");
 
-        List<Users> employee = repository.getUsersByRole(role);
+                String role = "employee";
 
-        for (Users u : employee) {
+                JSONArray jsona = new JSONArray();
+                JSONObject jsono = new JSONObject();
 
-            JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("userId", u.getUserId());
-            jSONObject1.put("userFullname", u.getUserFullname());
-            jSONObject1.put("userEmail", u.getUserEmail());
-            jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
-            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleId", u.getRoleId().getRoleId());
-            jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("userActive", u.getUserActive());
+                List<Users> employee = repository.getUsersByRole(role);
 
-            jsona.add(jSONObject1);
+                for (Users u : employee) {
+
+                    JSONObject jSONObject1 = new JSONObject();
+                    jSONObject1.put("userId", u.getUserId());
+                    jSONObject1.put("userFullname", u.getUserFullname());
+                    jSONObject1.put("userEmail", u.getUserEmail());
+                    jSONObject1.put("userPhoto", u.getUserPhoto());
+                    jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
+                    jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+                    jSONObject1.put("roleId", u.getRoleId().getRoleId());
+                    jSONObject1.put("roleName", u.getRoleId().getRoleName());
+                    jSONObject1.put("userActive", u.getUserActive());
+
+                    jsona.add(jSONObject1);
+                }
+                jsono.put("EmployeeList", jsona);
+
+                return jsono.toString();
+
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
         }
-        jsono.put("EmployeeList", jsona);
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
 
-        return jsono.toString();
+        return jSONObject.toJSONString();
     }
     
     @GetMapping("/gettrainerandemployee")
@@ -143,157 +194,280 @@ public class UsersController {
 
     @GetMapping("/getalltrainer")
     @ApiOperation(value = "${UsersController.getalltrainer}")
-    public String getAllTrainer() {
+    public String getAllTrainer(@RequestHeader("bearer") String header) {
 
-        String role = "trainer";
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jsono = new JSONObject();
+        if (cekIfExistToken == 1) {
+            Users user = repository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleId = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+            if (roleId == 1 || roleId == 2 || roleId == 3) {
+                System.out.println("you're authorized to access this operation");
 
-        List<Users> employee = repository.getUsersByRole(role);
-        System.out.println("test get trainer");
+                String role = "trainer";
 
-        for (Users u : employee) {
+                JSONArray jsona = new JSONArray();
+                JSONObject jsono = new JSONObject();
 
-            JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("userId", u.getUserId());
-            jSONObject1.put("userFullname", u.getUserFullname());
-            jSONObject1.put("userEmail", u.getUserEmail());
-            jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
-            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleId", u.getRoleId().getRoleId());
-            jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("userActive", u.getUserActive());
+                List<Users> employee = repository.getUsersByRole(role);
+                System.out.println("test get trainer");
 
-            jsona.add(jSONObject1);
+                for (Users u : employee) {
+
+                    JSONObject jSONObject1 = new JSONObject();
+                    jSONObject1.put("userId", u.getUserId());
+                    jSONObject1.put("userFullname", u.getUserFullname());
+                    jSONObject1.put("userEmail", u.getUserEmail());
+                    jSONObject1.put("userPhoto", u.getUserPhoto());
+                    jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
+                    jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+                    jSONObject1.put("roleId", u.getRoleId().getRoleId());
+                    jSONObject1.put("roleName", u.getRoleId().getRoleName());
+                    jSONObject1.put("userActive", u.getUserActive());
+
+                    jsona.add(jSONObject1);
+                }
+                jsono.put("trainnerList", jsona);
+
+                return jsono.toString();
+
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
         }
-        jsono.put("trainnerList", jsona);
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
 
-        return jsono.toString();
+        return jSONObject.toJSONString();
     }
 
     @GetMapping("/getallmanageractive")
     @ApiOperation(value = "${UsersController.getallmanagera}")
-    public String getAllManagerActive() {
+    public String getAllManagerActive(@RequestHeader("bearer") String header) {
 
-        String role = "manager active";
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jsono = new JSONObject();
+        if (cekIfExistToken == 1) {
+            Users user = repository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleId = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+            if (roleId == 1) {
+                System.out.println("you're authorized to access this operation");
 
-        List<Users> employee = repository.getUsersByRole(role);
-        System.out.println("test get user");
+                String role = "manager active";
 
-        for (Users u : employee) {
+                JSONArray jsona = new JSONArray();
+                JSONObject jsono = new JSONObject();
 
-            JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("userId", u.getUserId());
-            jSONObject1.put("userFullname", u.getUserFullname());
-            jSONObject1.put("userEmail", u.getUserEmail());
-            jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
-            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleId", u.getRoleId().getRoleId());
-            jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("userActive", u.getUserActive());
+                List<Users> employee = repository.getUsersByRole(role);
+                System.out.println("test get user");
 
-            jsona.add(jSONObject1);
+                for (Users u : employee) {
+
+                    JSONObject jSONObject1 = new JSONObject();
+                    jSONObject1.put("userId", u.getUserId());
+                    jSONObject1.put("userFullname", u.getUserFullname());
+                    jSONObject1.put("userEmail", u.getUserEmail());
+                    jSONObject1.put("userPhoto", u.getUserPhoto());
+                    jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
+                    jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+                    jSONObject1.put("roleId", u.getRoleId().getRoleId());
+                    jSONObject1.put("roleName", u.getRoleId().getRoleName());
+                    jSONObject1.put("userActive", u.getUserActive());
+
+                    jsona.add(jSONObject1);
+                }
+                jsono.put("managerActiveList", jsona);
+
+                return jsono.toString();
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
         }
-        jsono.put("managerActiveList", jsona);
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
 
-        return jsono.toString();
+        return jSONObject.toJSONString();
     }
 
     @GetMapping("/getallmanagerpassive")
     @ApiOperation(value = "${UsersController.getallmanagerp}")
-    public String getAllManagerPassive() {
+    public String getAllManagerPassive(@RequestHeader("bearer") String header) {
 
-        String role = "manager passive";
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jsono = new JSONObject();
+        if (cekIfExistToken == 1) {
+            Users user = repository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleId = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+            if (roleId == 1) {
+                System.out.println("you're authorized to access this operation");
 
-        List<Users> employee = repository.getUsersByRole(role);
-        System.out.println("test get user");
+                String role = "manager passive";
 
-        for (Users u : employee) {
+                JSONArray jsona = new JSONArray();
+                JSONObject jsono = new JSONObject();
 
-            JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("userId", u.getUserId());
-            jSONObject1.put("userFullname", u.getUserFullname());
-            jSONObject1.put("userEmail", u.getUserEmail());
-            jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
-            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleId", u.getRoleId().getRoleId());
-            jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("userActive", u.getUserActive());
+                List<Users> employee = repository.getUsersByRole(role);
+                System.out.println("test get user");
 
-            jsona.add(jSONObject1);
+                for (Users u : employee) {
+
+                    JSONObject jSONObject1 = new JSONObject();
+                    jSONObject1.put("userId", u.getUserId());
+                    jSONObject1.put("userFullname", u.getUserFullname());
+                    jSONObject1.put("userEmail", u.getUserEmail());
+                    jSONObject1.put("userPhoto", u.getUserPhoto());
+                    jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
+                    jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+                    jSONObject1.put("roleId", u.getRoleId().getRoleId());
+                    jSONObject1.put("roleName", u.getRoleId().getRoleName());
+                    jSONObject1.put("userActive", u.getUserActive());
+
+                    jsona.add(jSONObject1);
+                }
+                jsono.put("managerPassiveList", jsona);
+
+                return jsono.toString();
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
         }
-        jsono.put("managerPassiveList", jsona);
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
 
-        return jsono.toString();
+        return jSONObject.toJSONString();
     }
 
     @GetMapping("/getalladmin")
     @ApiOperation(value = "${UsersController.getalladmin}")
-    public String getAllAdmin() {
+    public String getAllAdmin(@RequestHeader("bearer") String header) {
 
-        String role = "admin";
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jsono = new JSONObject();
+        if (cekIfExistToken == 1) {
+            Users user = repository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleId = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+            if (roleId == 1) {
+                System.out.println("you're authorized to access this operation");
 
-        List<Users> employee = repository.getUsersByRole(role);
-        System.out.println("test get user");
+                String role = "admin";
 
-        for (Users u : employee) {
+                JSONArray jsona = new JSONArray();
+                JSONObject jsono = new JSONObject();
 
-            JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("userId", u.getUserId());
-            jSONObject1.put("userFullname", u.getUserFullname());
-            jSONObject1.put("userEmail", u.getUserEmail());
-            jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
-            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleId", u.getRoleId().getRoleId());
-            jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("userActive", u.getUserActive());
+                List<Users> employee = repository.getUsersByRole(role);
+                System.out.println("test get user");
 
-            jsona.add(jSONObject1);
+                for (Users u : employee) {
+
+                    JSONObject jSONObject1 = new JSONObject();
+                    jSONObject1.put("userId", u.getUserId());
+                    jSONObject1.put("userFullname", u.getUserFullname());
+                    jSONObject1.put("userEmail", u.getUserEmail());
+                    jSONObject1.put("userPhoto", u.getUserPhoto());
+                    jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
+                    jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+                    jSONObject1.put("roleId", u.getRoleId().getRoleId());
+                    jSONObject1.put("roleName", u.getRoleId().getRoleName());
+                    jSONObject1.put("userActive", u.getUserActive());
+
+                    jsona.add(jSONObject1);
+                }
+                jsono.put("adminList", jsona);
+
+                return jsono.toString();
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
         }
-        jsono.put("adminList", jsona);
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
 
-        return jsono.toString();
+        return jSONObject.toJSONString();
     }
 
     @GetMapping("/getusersactive")
     @ApiOperation(value = "${UsersController.getusersactive}")
-    public String getUsersActive() {
-        List<Users> users = repository.getActiveUsers();
-        JSONArray jsona = new JSONArray();
-        JSONObject jsono = new JSONObject();
+    public String getUsersActive(@RequestHeader("bearer") String header) {
 
-        for (Users u : users) {
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-            JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("userId", u.getUserId());
-            jSONObject1.put("userFullname", u.getUserFullname());
-            jSONObject1.put("userEmail", u.getUserEmail());
-            jSONObject1.put("userPhoto", u.getUserPhoto());
-            jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
-            jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
-            jSONObject1.put("roleId", u.getRoleId().getRoleId());
-            jSONObject1.put("roleName", u.getRoleId().getRoleName());
-            jSONObject1.put("userActive", u.getUserActive());
+        if (cekIfExistToken == 1) {
+            Users user = repository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleId = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+            if (roleId == 1 || roleId == 2 || roleId == 3 || roleId == 4) {
+                System.out.println("you're authorized to access this operation");
 
-            jsona.add(jSONObject1);
+                List<Users> users = repository.getActiveUsers();
+                JSONArray jsona = new JSONArray();
+                JSONObject jsono = new JSONObject();
+
+                for (Users u : users) {
+
+                    JSONObject jSONObject1 = new JSONObject();
+                    jSONObject1.put("userId", u.getUserId());
+                    jSONObject1.put("userFullname", u.getUserFullname());
+                    jSONObject1.put("userEmail", u.getUserEmail());
+                    jSONObject1.put("userPhoto", u.getUserPhoto());
+                    jSONObject1.put("divisionId", u.getDivisionId().getDivisionId());
+                    jSONObject1.put("divisionName", u.getDivisionId().getDivisionName());
+                    jSONObject1.put("roleId", u.getRoleId().getRoleId());
+                    jSONObject1.put("roleName", u.getRoleId().getRoleName());
+                    jSONObject1.put("userActive", u.getUserActive());
+
+                    jsona.add(jSONObject1);
+                }
+                jsono.put("userActiveList", jsona);
+
+                return jsono.toString();
+
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
         }
-        jsono.put("userActiveList", jsona);
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
 
-        return jsono.toString();
+        return jSONObject.toJSONString();
     }
 
     @GetMapping("/getuserexpectadmin")
@@ -363,30 +537,56 @@ public class UsersController {
 
     @GetMapping("/getuser/{id}")
     @ApiOperation(value = "${UsersController.getuserbyid}")
-    public String getUserByID(@PathVariable String id) {
+    public String getUserByID(@RequestHeader("bearer") String header, @PathVariable String id) {
 
-        Optional<Users> users = repository.getUsersByID(id);
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-        if (!users.isPresent()) {
-            System.out.println("id not found");
+        if (cekIfExistToken == 1) {
+            Users user = repository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleId = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+            if (roleId == 1 || roleId == 2 || roleId == 3 || roleId == 4) {
+                System.out.println("you're authorized to access this operation");
+
+                Optional<Users> users = repository.getUsersByID(id);
+
+                if (!users.isPresent()) {
+                    System.out.println("id not found");
+                }
+                JSONArray jsona = new JSONArray();
+                JSONObject jsono = new JSONObject();
+                JSONObject jSONObject1 = new JSONObject();
+
+                jSONObject1.put("userId", users.get().getUserId());
+                jSONObject1.put("userFullname", users.get().getUserFullname());
+                jSONObject1.put("userEmail", users.get().getUserEmail());
+                jSONObject1.put("userPhoto", users.get().getUserPhoto());
+                jSONObject1.put("divisionId", users.get().getDivisionId().getDivisionId());
+                jSONObject1.put("divisionName", users.get().getDivisionId().getDivisionName());
+                jSONObject1.put("roleId", users.get().getRoleId().getRoleId());
+                jSONObject1.put("roleName", users.get().getRoleId().getRoleName());
+                jSONObject1.put("userActive", users.get().getUserActive());
+
+                jsona.add(jSONObject1);
+                jsono.put("userList", jsona);
+                return jsono.toString();
+
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
         }
-        JSONArray jsona = new JSONArray();
-        JSONObject jsono = new JSONObject();
-        JSONObject jSONObject1 = new JSONObject();
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
 
-        jSONObject1.put("userId", users.get().getUserId());
-        jSONObject1.put("userFullname", users.get().getUserFullname());
-        jSONObject1.put("userEmail", users.get().getUserEmail());
-        jSONObject1.put("userPhoto", users.get().getUserPhoto());
-        jSONObject1.put("divisionId", users.get().getDivisionId().getDivisionId());
-        jSONObject1.put("divisionName", users.get().getDivisionId().getDivisionName());
-        jSONObject1.put("roleId", users.get().getRoleId().getRoleId());
-        jSONObject1.put("roleName", users.get().getRoleId().getRoleName());
-        jSONObject1.put("userActive", users.get().getUserActive());
+        return jSONObject.toJSONString();
 
-        jsona.add(jSONObject1);
-        jsono.put("userList", jsona);
-        return jsono.toString();
     }
     
     @PutMapping("/updatephoto/{id}")
@@ -406,115 +606,177 @@ public class UsersController {
 
     @PutMapping("/update/{id}")
     @ApiOperation(value = "${UsersController.updatebyid}")
-    public String updateUser(@RequestBody Map<String, ?> input, @PathVariable String id) {
-        
+    public String updateUser(@RequestHeader("bearer") String header, @RequestBody Map<String, ?> input,
+            @PathVariable String id
+    ) {
         JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-        Iterable<Users> userlist = repository.getUsersListByID(id);
-        System.out.println("user: " + userlist);
-        Users user = repository.getEntityUsersByID(id);
+        if (cekIfExistToken == 1) {
+            Users userbyToken = repository.findUserByToken(header);
+            System.out.println("user email: " + userbyToken.getUserEmail());
+            int roleIdC = userbyToken.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleIdC);
+            if (roleIdC == 1 || roleIdC == 2 || roleIdC == 3 || roleIdC == 4 || roleIdC == 5) {
+                System.out.println("you're authorized to access this operation");
 
-        if (user == null) {
+//        JSONObject jSONObject = new JSONObject();
+                Iterable<Users> userlist = repository.getUsersListByID(id);
+                System.out.println("user: " + userlist);
+                Users user = repository.getEntityUsersByID(id);
 
-            jSONObject.put("status", "false");
-            jSONObject.put("description", "update unsuccessfully, userId not found");
+                if (user == null) {
 
-            return jSONObject.toString();
+                    jSONObject.put("status", "false");
+                    jSONObject.put("description", "update unsuccessfully, userId not found");
+
+                    return jSONObject.toString();
+                }
+
+                String userFullname = (String) input.get("userFullname");
+                String userEmail = (String) input.get("userEmail");
+                String userActive = (String) input.get("userActive");
+                String userPhoto = (String) input.get("userPhoto");
+
+                String role = (String) input.get("roleId");
+                String division = (String) input.get("divisionId");
+                int roleId = Integer.parseInt(role);
+                int divisionId = Integer.parseInt(division);
+
+                user.setUserFullname(userFullname);
+                user.setUserEmail(userEmail);
+                user.setUserActive(userActive);
+                user.setUserPhoto(userPhoto);
+                user.setRoleId(new Role(roleId));
+                user.setDivisionId(new Division(divisionId));
+                repository.save(user);
+
+                System.out.println("update berhasil");
+
+                jSONObject.put("status", "true");
+                jSONObject.put("description", "update successfully");
+
+                return jSONObject.toString();
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
         }
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
 
-        String userFullname = (String) input.get("userFullname");
-        String userEmail = (String) input.get("userEmail");
-        String userActive = (String) input.get("userActive");
-        String userPhoto = (String) input.get("userPhoto");
-
-        String role = (String) input.get("roleId");
-        String division = (String) input.get("divisionId");
-        int roleId = Integer.parseInt(role);
-        int divisionId = Integer.parseInt(division);
-
-        user.setUserFullname(userFullname);
-        user.setUserEmail(userEmail);
-        user.setUserActive(userActive);
-        user.setUserPhoto(userPhoto);
-        user.setRoleId(new Role(roleId));
-        user.setDivisionId(new Division(divisionId));
-        repository.save(user);
-
-        System.out.println("update berhasil");
-
-        jSONObject.put("status", "true");
-        jSONObject.put("description", "update successfully");
-
-        return jSONObject.toString();
+        return jSONObject.toJSONString();
 
     }
 
     @PostMapping("/insert")
     @ApiOperation(value = "${UsersController.insert}")
-    public String insertNewUser(@RequestBody Map<String, ?> input) {
+    public String insertNewUser(@RequestBody Map<String, ?> input,
+            @RequestHeader("bearer") String header) {
 
-        System.out.println("insert new user running");
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-        String userFullname = (String) input.get("userFullname");
-        String userEmail = (String) input.get("userEmail");
-        String userActive = (String) input.get("userActive");
-        String userPhoto = (String) input.get("userPhoto");
+        if (cekIfExistToken == 1) {
+            Users user = repository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleIdC = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleIdC);
+            if (roleIdC == 1) {
+                System.out.println("you're authorized to access this operation");
 
-        int emailexist = repository.findIfExistEmail(userEmail);
-        if (emailexist == 1) {
-            JSONObject jSONObject1 = new JSONObject();
+                System.out.println("insert new user running");
 
-            jSONObject1.put("status", "false");
-            jSONObject1.put("description", "insert unsuccessfully, email already exist");
+                String userFullname = (String) input.get("userFullname");
+                String userEmail = (String) input.get("userEmail");
+                String userActive = (String) input.get("userActive");
+                String userPhoto = (String) input.get("userPhoto");
 
-            return jSONObject1.toString();
-        }
+                int emailexist = repository.findIfExistEmail(userEmail);
+                if (emailexist == 1) {
+                    JSONObject jSONObject1 = new JSONObject();
 
-        String role = (String) input.get("roleId");
-        String division = (String) input.get("divisionId");
-        int roleId = Integer.parseInt(role);
-        int divisionId = Integer.parseInt(division);
+                    jSONObject1.put("status", "false");
+                    jSONObject1.put("description", "insert unsuccessfully, email already exist");
 
-        String newID = getAlphaNumericString(8);
-        System.out.println("new generate ID: " + newID);
-        int a = repository.findIfExistID(newID);
-        System.out.println("if exist: " + a);
-        if (a == 1) {
-            do {
-                newID = getAlphaNumericString(8);
-                System.out.println("iterate generate: " + newID);
-                a = repository.findIfExistID(newID);
+                    return jSONObject1.toString();
+                }
+
+                String role = (String) input.get("roleId");
+                String division = (String) input.get("divisionId");
+                int roleId = Integer.parseInt(role);
+                int divisionId = Integer.parseInt(division);
+
+                String newID = getAlphaNumericString(8);
+                System.out.println("new generate ID: " + newID);
+                int a = repository.findIfExistID(newID);
                 System.out.println("if exist: " + a);
-            } while (a == 1);
-        }
-        System.out.println("newID: " + newID);
+                if (a == 1) {
+                    do {
+                        newID = getAlphaNumericString(8);
+                        System.out.println("iterate generate: " + newID);
+                        a = repository.findIfExistID(newID);
+                        System.out.println("if exist: " + a);
+                    } while (a == 1);
+                }
+                System.out.println("newID: " + newID);
 
-        String dummyPassword = UUID.randomUUID().toString();
-        dummyPassword = dummyPassword.substring(0, 8);
-        String dummyuserUnixcodeValue = UUID.randomUUID().toString();
-        dummyuserUnixcodeValue = dummyuserUnixcodeValue.substring(0, 6);
+                String dummyPassword = UUID.randomUUID().toString();
+                dummyPassword = dummyPassword.substring(0, 8);
+                String dummyuserUnixcodeValue = UUID.randomUUID().toString();
+                dummyuserUnixcodeValue = dummyuserUnixcodeValue.substring(0, 6);
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
+                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
 
-        String encodePassword = encoder.encode(dummyPassword);
+                String encodePassword = encoder.encode(dummyPassword);
 
-        String userId = newID; //set user id
-        String userPassword = encodePassword; //set user password
-        String userUnixcodeValue = dummyuserUnixcodeValue; //set user unicodevalue
-        Date userUnixcodeDate = new Date(); //set user UnixcodeDate
+                String userId = newID; //set user id
+                String userPassword = encodePassword; //set user password
+                String userUnixcodeValue = dummyuserUnixcodeValue; //set user unicodevalue
+                Date userUnixcodeDate = new Date(); //set user UnixcodeDate
 
-        Users users = new Users(userId, userFullname, userEmail, userPassword,
-                userActive, userUnixcodeValue, userUnixcodeDate, userPhoto,
-                new Role(roleId), new Division(divisionId));
+                Users users = new Users(userId, userFullname, userEmail, userPassword,
+                        userActive, userUnixcodeValue, userUnixcodeDate, userPhoto,
+                        new Role(roleId), new Division(divisionId));
 
-        repository.save(users);
-        System.out.println("new user saved");
+                repository.save(users);
+                System.out.println("new user saved");
 
-        JSONObject jSONObject1 = new JSONObject();
+                JSONObject jSONObject1 = new JSONObject();
 
-        jSONObject1.put("status", "true");
-        jSONObject1.put("description", "insert successfully");
+                jSONObject1.put("status", "true");
+                jSONObject1.put("description", "insert successfully");
 
+                //send mail
+                String sbj = "Metrodata Coding Camp New User";
+                String title = "Welcome Aboard!";
+//        String content = "Username: " + userEmail + ",\n Password: "+dummyPassword;
+                String login = "https://www.instagram.com/";
+                String content = "please change your password immediately!";
+                String welcome = "We are gladly happy for accepting you as our new family in Metrodata Coding Camp, congratulation! Before you join with us, we will introduce you to our presence system called HadirApp. HadirApp will help us to know about attendance, here your email and password for your login requirement.";
+
+                System.out.println("send mail running");
+
+                Map<String, Object> model = new HashMap<>();
+                model.put("title", title);
+                model.put("name", userFullname);
+                model.put("username", userEmail);
+                model.put("password", dummyPassword);
+                model.put("message", content);
+                model.put("welcome", welcome);
+                model.put("login", login);
+
+//        model.put("login", login);
+                springMailServices.sendMail(model, sbj, userEmail);
+                System.out.println("mail sent");
+                //mail
+
+                return jSONObject1.toString();
         //send mail
         String sbj = "Metrodata Coding Camp New User";
         String title = "Welcome Aboard!";
@@ -538,111 +800,147 @@ public class UsersController {
         springMailServices.sendMail(model, sbj, userEmail);
         System.out.println("mail sent");
         //mail
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
 
-        return jSONObject1.toString();
+                return jSONObject.toJSONString();
+            }
+        }
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
+
+        return jSONObject.toJSONString();
     }
 
     @PostMapping("/insertemployee")
-    public String insertEmployee(@RequestBody Map<String, ?> input) {
+    public String insertEmployee(@RequestBody Map<String, ?> input,
+            @RequestHeader("bearer") String header) {
 
-        String userFullname = (String) input.get("userFullname");
-        String userEmail = (String) input.get("userEmail");
-        String userActive = (String) input.get("userActive");
-        String userPhoto = (String) input.get("userPhoto");
-        String bootcampIds = (String) input.get("bootcampId");
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-        int emailexist = repository.findIfExistEmail(userEmail);
-        if (emailexist == 1) {
+        if (cekIfExistToken == 1) {
+            Users user = repository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleIdC = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleIdC);
+            if (roleIdC == 1 || roleIdC == 2 || roleIdC == 4) {
+                System.out.println("you're authorized to access this operation");
 
-            JSONObject jSONObject1 = new JSONObject();
+                String userFullname = (String) input.get("userFullname");
+                String userEmail = (String) input.get("userEmail");
+                String userActive = (String) input.get("userActive");
+                String userPhoto = (String) input.get("userPhoto");
+                String bootcampIds = (String) input.get("bootcampId");
 
-            jSONObject1.put("status", "false");
-            jSONObject1.put("description", "insert unsuccessfully, email already exist");
+                int emailexist = repository.findIfExistEmail(userEmail);
+                if (emailexist == 1) {
 
-            return jSONObject1.toString();
-        }
+                    JSONObject jSONObject1 = new JSONObject();
 
-        String role = (String) input.get("roleId");
-        String division = (String) input.get("divisionId");
-        int roleId = Integer.parseInt(role);
-        int divisionId = Integer.parseInt(division);
+                    jSONObject1.put("status", "false");
+                    jSONObject1.put("description", "insert unsuccessfully, email already exist");
 
-        String newID = getAlphaNumericString(8);
-        System.out.println("new generate ID: " + newID);
-        int a = repository.findIfExistID(newID);
-        System.out.println("if exist: " + a);
-        if (a == 1) {
-            do {
-                newID = getAlphaNumericString(8);
-                System.out.println("iterate generate: " + newID);
-                a = repository.findIfExistID(newID);
+                    return jSONObject1.toString();
+                }
+
+                String role = (String) input.get("roleId");
+                String division = (String) input.get("divisionId");
+                int roleId = Integer.parseInt(role);
+                int divisionId = Integer.parseInt(division);
+
+                String newID = getAlphaNumericString(8);
+                System.out.println("new generate ID: " + newID);
+                int a = repository.findIfExistID(newID);
                 System.out.println("if exist: " + a);
-            } while (a == 1);
-        }
+                if (a == 1) {
+                    do {
+                        newID = getAlphaNumericString(8);
+                        System.out.println("iterate generate: " + newID);
+                        a = repository.findIfExistID(newID);
+                        System.out.println("if exist: " + a);
+                    } while (a == 1);
+                }
 
-        String dummyPassword = UUID.randomUUID().toString();
-        dummyPassword = dummyPassword.substring(0, 8);
-        String dummyuserUnixcodeValue = UUID.randomUUID().toString();
-        dummyuserUnixcodeValue = dummyuserUnixcodeValue.substring(0, 6);
+                String dummyPassword = UUID.randomUUID().toString();
+                dummyPassword = dummyPassword.substring(0, 8);
+                String dummyuserUnixcodeValue = UUID.randomUUID().toString();
+                dummyuserUnixcodeValue = dummyuserUnixcodeValue.substring(0, 6);
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
+                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
 
-        String encodePassword = encoder.encode(dummyPassword);
+                String encodePassword = encoder.encode(dummyPassword);
 
-        String userId = newID; //set user id
-        String userPassword = encodePassword; //set user password
-        String userUnixcodeValue = dummyuserUnixcodeValue; //set user unicodevalue
-        Date userUnixcodeDate = new Date(); //set user UnixcodeDate
+                String userId = newID; //set user id
+                String userPassword = encodePassword; //set user password
+                String userUnixcodeValue = dummyuserUnixcodeValue; //set user unicodevalue
+                Date userUnixcodeDate = new Date(); //set user UnixcodeDate
 
-        // Generate bootcamp detail id
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        Date date = new Date();
-        String currentDate = formatter.format(date);
-        String bootcampDetailId = newID + bootcampIds;
+                // Generate bootcamp detail id
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+                Date date = new Date();
+                String currentDate = formatter.format(date);
+                String bootcampDetailId = newID + currentDate;
 
-        // Save Emplolee 
-        Users users = new Users(userId, userFullname, userEmail, userPassword,
-                userActive, userUnixcodeValue, userUnixcodeDate, userPhoto,
-                new Role(roleId), new Division(divisionId));
+                // Save Emplolee 
+                Users users = new Users(userId, userFullname, userEmail, userPassword,
+                        userActive, userUnixcodeValue, userUnixcodeDate, userPhoto,
+                        new Role(roleId), new Division(divisionId));
 
-        // Save Bootcamp Detail
-        BootcampDetail bootcampDetail = new BootcampDetail(bootcampDetailId, new Users(newID), new Bootcamp(bootcampIds));
+                // Save Bootcamp Detail
+                BootcampDetail bootcampDetail = new BootcampDetail(bootcampDetailId, new Users(newID), new Bootcamp(bootcampIds));
 
-        repository.save(users);
-        bootcampDetailRepository.save(bootcampDetail);
+                repository.save(users);
+                bootcampDetailRepository.save(bootcampDetail);
 
-        System.out.println("new user saved");
+                System.out.println("new user saved");
 
-        JSONObject jSONObject1 = new JSONObject();
+                JSONObject jSONObject1 = new JSONObject();
 
-        jSONObject1.put("status", "true");
-        jSONObject1.put("description", "insert successfully");
+                jSONObject1.put("status", "true");
+                jSONObject1.put("description", "insert successfully");
 
-        //send mail
-        String sbj = "Metrodata Coding Camp New User";
-        String title = "Welcome Aboard!";
+                //send mail
+                String sbj = "Metrodata Coding Camp New User";
+                String title = "Welcome Aboard!";
 //        String content = "Username: " + userEmail + ",\n Password: "+dummyPassword;
-        String login = "https://www.instagram.com/";
-        String content = "please change your password immediately!";
-        String welcome = "We are gladly happy for accepting you as our new family in Metrodata Coding Camp, congratulation! Before you join with us, we will introduce you to our presence system called HadirApp. HadirApp will help us to know about attendance, here your email and password for your login requirement.";
+                String login = "https://www.instagram.com/";
+                String content = "please change your password immediately!";
+                String welcome = "We are gladly happy for accepting you as our new family in Metrodata Coding Camp, congratulation! Before you join with us, we will introduce you to our presence system called HadirApp. HadirApp will help us to know about attendance, here your email and password for your login requirement.";
 
-        System.out.println("send mail running");
+                System.out.println("send mail running");
 
-        Map<String, Object> model = new HashMap<>();
-        model.put("title", title);
-        model.put("name", userFullname);
-        model.put("username", userEmail);
-        model.put("password", dummyPassword);
-        model.put("message", content);
-        model.put("welcome", welcome);
-        model.put("login", login);
+                Map<String, Object> model = new HashMap<>();
+                model.put("title", title);
+                model.put("name", userFullname);
+                model.put("username", userEmail);
+                model.put("password", dummyPassword);
+                model.put("message", content);
+                model.put("welcome", welcome);
 
 //        model.put("login", login);
-        springMailServices.sendMail(model, sbj, userEmail);
-        System.out.println("mail sent");
-        //mail
+                springMailServices.sendMail(model, sbj, userEmail);
+                System.out.println("mail sent");
+                //mail
 
-        return jSONObject1.toString();
+                return jSONObject1.toString();
+
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
+        }
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
+
+
+        return jSONObject.toJSONString();
     }
 
     @PostMapping("/assigntrainer")
@@ -680,64 +978,114 @@ public class UsersController {
 
     @PutMapping("/changepassword/{id}")
     @ApiOperation(value = "${UsersController.changepassword}")
-    public String changePassword(@PathVariable String id, @RequestBody Map<String, ?> input) {
+    public String changePassword(@PathVariable String id,
+            @RequestBody Map<String, ?> input, @RequestHeader("bearer") String header) {
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-        String oldPassword = (String) input.get("oldPassword");
-        String newPassword = (String) input.get("newPassword");
+        if (cekIfExistToken == 1) {
+            Users userCek = repository.findUserByToken(header);
+            System.out.println("user email: " + userCek.getUserEmail());
+            int roleId = userCek.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+            if (roleId == 1 || roleId == 2 || roleId == 3 || roleId == 4) {
+                System.out.println("you're authorized to access this operation");
 
-        Users user = repository.getEntityUsersByID(id);
-        if (user == null) {
-            JSONObject jSONObject1 = new JSONObject();
+                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
 
-            jSONObject1.put("status", "false");
-            jSONObject1.put("description", "update unsuccessfully, user not found");
+                String oldPassword = (String) input.get("oldPassword");
+                String newPassword = (String) input.get("newPassword");
 
-            return jSONObject1.toString();
-        }
+                Users user = repository.getEntityUsersByID(id);
+                if (user == null) {
+                    JSONObject jSONObject1 = new JSONObject();
 
-        String activePassword = user.getUserPassword();
+                    jSONObject1.put("status", "false");
+                    jSONObject1.put("description", "update unsuccessfully, user not found");
 
-        boolean a = encoder.matches(oldPassword, activePassword);
-        System.out.println("matches password: " + a);
+                    return jSONObject1.toString();
+                }
 
-        if (a) {
-            newPassword = encoder.encode(newPassword);
-            user.setUserPassword(newPassword);
-            repository.save(user);
+                String activePassword = user.getUserPassword();
+
+                boolean a = encoder.matches(oldPassword, activePassword);
+                System.out.println("matches password: " + a);
+
+                if (a) {
+                    newPassword = encoder.encode(newPassword);
+                    user.setUserPassword(newPassword);
+                    repository.save(user);
 //            return "change password success";
 
-            JSONObject jSONObject1 = new JSONObject();
+                    JSONObject jSONObject1 = new JSONObject();
 
-            jSONObject1.put("status", "true");
-            jSONObject1.put("description", "your password has been successfully changed");
+                    jSONObject1.put("status", "true");
+                    jSONObject1.put("description", "your password has been successfully changed");
 
-            return jSONObject1.toString();
+                    return jSONObject1.toString();
+                }
+
+                JSONObject jSONObject1 = new JSONObject();
+
+                jSONObject1.put("status", "false");
+                jSONObject1.put("description", "update unsuccessfully, your old password is invalid");
+
+                return jSONObject1.toString();
+
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
         }
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
 
-        JSONObject jSONObject1 = new JSONObject();
-
-        jSONObject1.put("status", "false");
-        jSONObject1.put("description", "update unsuccessfully, your old password is invalid");
-
-        return jSONObject1.toString();
+        return jSONObject.toJSONString();
 //        return "change failed";
     }
 
     @DeleteMapping("/deleteuser/{id}")
     @ApiOperation(value = "Hard delete users!")
-    public String hardDeleteUser(@PathVariable String id) {
+    public String hardDeleteUser(@PathVariable String id, @RequestHeader("bearer") String header) {
 
-        repository.deleteUserById(id);
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-        JSONObject jSONObject1 = new JSONObject();
+        if (cekIfExistToken == 1) {
+            Users user = repository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleId = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+            if (roleId == 1) {
+                System.out.println("you're authorized to access this operation");
 
-        jSONObject1.put("status", "true");
-        jSONObject1.put("description", "delete succefully");
+                repository.deleteUserById(id);
 
-        return jSONObject1.toJSONString();
+                JSONObject jSONObject1 = new JSONObject();
 
+                jSONObject1.put("status", "true");
+                jSONObject1.put("description", "delete succefully");
+
+                return jSONObject1.toJSONString();
+
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
+        }
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
+
+        return jSONObject.toJSONString();
     }
 
     @DeleteMapping("/cancelassign/{id}")
@@ -757,35 +1105,60 @@ public class UsersController {
 
     @GetMapping("/gettrainerbootcamp/{id}")
     @ApiOperation(value = "Get Bootcamp by Trainer")
-    public String getTrainerBootcampList(@PathVariable String id) {
+    public String getTrainerBootcampList(@PathVariable String id,
+            @RequestHeader("bearer") String header) {
 
-        JSONArray jsona = new JSONArray();
-        JSONObject jsono = new JSONObject();
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = repository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
 
-        List<Bootcamp> bootcamp = bootcampRepository.getBootcamp(id);
+        if (cekIfExistToken == 1) {
+            Users user = repository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleId = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+            if (roleId == 1 || roleId == 2 || roleId == 3 || roleId == 4) {
+                System.out.println("you're authorized to access this operation");
 
-        if (bootcamp == null) {
-            JSONObject jSONObject1 = new JSONObject();
+                JSONArray jsona = new JSONArray();
+                JSONObject jsono = new JSONObject();
 
-            jSONObject1.put("status", "false");
-            jSONObject1.put("description", "trainer not found");
-            return jSONObject1.toString();
+                List<Bootcamp> bootcamp = bootcampRepository.getBootcamp(id);
 
+                if (bootcamp == null) {
+                    JSONObject jSONObject1 = new JSONObject();
+
+                    jSONObject1.put("status", "false");
+                    jSONObject1.put("description", "trainer not found");
+                    return jSONObject1.toString();
+
+                }
+
+                for (Bootcamp b : bootcamp) {
+
+                    JSONObject jSONObject1 = new JSONObject();
+                    jSONObject1.put("bootcampId", b.getBootcampId());
+                    jSONObject1.put("bootcampActive", b.getBootcampActive());
+                    jSONObject1.put("bootcampLocation", b.getBootcampLocation());
+                    jSONObject1.put("bootcampName", b.getBootcampName());
+
+                    jsona.add(jSONObject1);
+                }
+                jsono.put("bootcampList", jsona);
+
+                return jsono.toString();
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
         }
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
 
-        for (Bootcamp b : bootcamp) {
-
-            JSONObject jSONObject1 = new JSONObject();
-            jSONObject1.put("bootcampId", b.getBootcampId());
-            jSONObject1.put("bootcampActive", b.getBootcampActive());
-            jSONObject1.put("bootcampLocation", b.getBootcampLocation());
-            jSONObject1.put("bootcampName", b.getBootcampName());
-
-            jsona.add(jSONObject1);
-        }
-        jsono.put("bootcampList", jsona);
-
-        return jsono.toString();
+        return jSONObject.toJSONString();
     }
 
     @GetMapping("/getatteandancebytrainner/{id}")
