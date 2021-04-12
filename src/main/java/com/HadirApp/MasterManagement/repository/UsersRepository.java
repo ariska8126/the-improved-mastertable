@@ -5,6 +5,7 @@
  */
 package com.HadirApp.MasterManagement.repository;
 
+import com.HadirApp.MasterManagement.entity.Attendance;
 import com.HadirApp.MasterManagement.entity.Users;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +25,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface UsersRepository extends JpaRepository<Users, Integer> {
 
+    @Query(value = "SELECT * FROM users WHERE role_id in (4,5) and user_active = 'true'", nativeQuery = true)
+    Iterable<Users> getTrainerAndEmployee();
+
     //get user active = true
     @Query(value = "SELECT * FROM users WHERE user_active = 'true'", nativeQuery = true)
     List<Users> getActiveUsers();
-    
+
+    @Query(value = "SELECT * FROM users WHERE user_active = 'true' and role_id <> 1", nativeQuery = true)
+    List<Users> getActiveUsersExpectAdmin();
+
     //get user by role & status is active
     @Query(value = "SELECT * FROM users u JOIN role r ON u.role_id = r.role_id WHERE r.role_name LIKE ?1 AND u.user_active = 'true'", nativeQuery = true)
-    List<Users> getUsersByRole(@Param ("id") String role);
+    List<Users> getUsersByRole(@Param("id") String role);
 
     //get user id
     @Query(value = "SELECT user_id FROM users", nativeQuery = true)
@@ -39,37 +46,51 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     //get user by id
     @Query(value = "SELECT * FROM users WHERE user_id = ?1", nativeQuery = true)
     public Optional<Users> getUsersByID(@Param("id") String id);
-    
+
     //get user by id list
     @Query(value = "SELECT * FROM users WHERE user_id = ?1", nativeQuery = true)
     public Iterable<Users> getUsersListByID(@Param("id") String id);
-    
+
     //get entity user by id
     @Query(value = "SELECT * FROM users WHERE user_id = ?1", nativeQuery = true)
     public Users getEntityUsersByID(@Param("id") String id);
-    
+
     //IF EXIST ID
     @Query(value = "SELECT IF(EXISTS(SELECT * FROM users WHERE user_id = ?1),1,0)", nativeQuery = true)
     public int findIfExistID(@Param("id") String id);
-    
+
     //IF EXIST EMAIL
     @Query(value = "SELECT IF(EXISTS(SELECT * FROM users WHERE user_email = ?1),1,0)", nativeQuery = true)
     public int findIfExistEmail(@Param("mail") String mail);
-    
+
+    // IF EXISY TOKEN
+    @Query(value = "SELECT IF(EXISTS(SELECT * FROM `users` WHERE user_token = ?1),1,0)", nativeQuery = true)
+    public int findIfExistToken(@Param("token") String token);
+
+    //select user by token
+    @Query(value = "SELECT * FROM `users` WHERE user_token = ?1", nativeQuery = true)
+    public Users findUserByToken(@Param("token") String token);
+
     // HARD DELETE USER
     @Modifying
     @Query(value = "DELETE FROM users where users.user_id = :userId", nativeQuery = true)
     int deleteUserById(@Param("userId") String id);
-    
-    //if exist token
-    @Query(value="SELECT IF(EXISTS(SELECT * FROM `users` WHERE user_token = ?1),1,0)",nativeQuery = true)
-    public int findIfExistToken(@Param ("token") String token);
-    
-    //select user by token
-    @Query(value="SELECT * FROM `users` WHERE user_token = ?1",nativeQuery = true)
-    public Users findUserByToken(@Param ("token") String token);
-    
-    //select bootcamp id trainer
-    @Query(value="", nativeQuery = true)
-    public String findBootcampidByUserId(@Param ("id") String id);
+
+    // Get Bootcamp and Trainner
+    @Query(value = "select attendance.* from attendance join users on attendance.user_id = users.user_id join bootcamp_detail on bootcamp_detail.user_id = users.user_id where bootcamp_detail.bootcamp_id in (:bootcampId)", nativeQuery = true)
+    Iterable<Attendance> getAttendanceByBootcamp(@Param("bootcampId") String bootcampId);
+
+    // Delete assign 
+    @Modifying
+    @Query(value = "DELETE from bootcamp_detail WHERE bootcamp_detail.bootcamp_detail_id = :userId", nativeQuery = true)
+    int deleteTrainnerInBootcamp(@Param("userId") String id);
+
+    // Get Bootcamp and Trainner
+    @Query(value = "select users.* from  users join bootcamp_detail on bootcamp_detail.user_id = users.user_id where users.role_id = 5 and bootcamp_detail.bootcamp_id in (:bootcampId)", nativeQuery = true)
+    Iterable<Users> getUserByBootcampTrainner(@Param("bootcampId") String bootcampId);
+
+    @Modifying
+    @Query(value = "UPDATE users set user_photo = :userPhoto where user_id = :userId", nativeQuery = true)
+    int updateUserPhoto(@Param("userPhoto") String userPhoto, @Param("userId") String userId);
+
 }

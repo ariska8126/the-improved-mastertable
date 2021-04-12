@@ -87,7 +87,8 @@ public class BootcampController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+
+            if (roleId != 5) {
                 System.out.println("you're authorized to access this operation");
 
                 List<Bootcamp> bootcamp = bootcampRepository.findAll();
@@ -119,9 +120,9 @@ public class BootcampController {
         jSONObject.put("status", "false");
         jSONObject.put("description", "your token didn't authorized to access");
 
+
         return jSONObject.toJSONString();
     }
-
     // Read all where status = true
     @GetMapping("/getactivebootcamp")
     @ApiOperation(value = "${BootcampController.getactivebootcamp}")
@@ -224,6 +225,62 @@ public class BootcampController {
         jSONObject.put("description", "your token didn't authorized to access");
 
         return jSONObject.toJSONString();
+    }
+
+    @GetMapping("/getbootcampbyuserid/{id}")
+    @ApiOperation(value = "Get bootcamp by User Id")
+    public String getBootcampByUserId(@PathVariable String id, @RequestHeader("bearer") String header) {
+        JSONObject jSONObject = new JSONObject();
+        int cekIfExistToken = userRepository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
+
+        if (cekIfExistToken == 1) {
+            Users user = userRepository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleId = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+
+            if (roleId != 5) {
+                Iterable<Bootcamp> bootcamp = bootcampRepository.getBootcampByUser(id);
+
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject2 = new JSONObject();
+
+                if (jsonArray == null) {
+                    jsonObject2.put("description", "data not found");
+                    jsonObject2.put("status", "false");
+                    jsonArray.add(jsonObject2);
+
+                    jsonObject2.put("bootcamp", jsonArray);
+
+                    return jsonObject2.toString();
+                } else {
+                    for (Bootcamp bl : bootcamp) {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("bootcampId", bl.getBootcampId());
+                        jsonObject.put("bootcampName", bl.getBootcampName());
+                        jsonObject.put("bootcampLocation", bl.getBootcampLocation());
+                        jsonObject.put("bootcampActive", bl.getBootcampActive());
+                        jsonArray.add(jsonObject);
+                    }
+
+                    jsonObject2.put("bootcampList", jsonArray);
+
+                    return jsonObject2.toString();
+                }
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
+        } else {
+            jSONObject.put("status", "false");
+            jSONObject.put("description", "your token didn't authorized to access");
+
+            return jSONObject.toJSONString();
+        }
     }
 
     // UPDATE AND SOFT DELETE
