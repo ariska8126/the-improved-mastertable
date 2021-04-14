@@ -62,7 +62,7 @@ public class DivisionController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1 || roleId == 2) {
+            if (roleId == 1 || roleId == 4 || roleId == 2 || roleId == 5) {
                 System.out.println("you're authorized to access this operation");
 
                 List<Division> division = divRepository.findAll();
@@ -107,7 +107,7 @@ public class DivisionController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1 || roleId == 2) {
+            if (roleId == 1 || roleId == 4 || roleId == 2 || roleId == 5) {
                 System.out.println("you're authorized to access this operation");
 
                 List<Division> division = divRepository.getActiveDivision();
@@ -116,12 +116,12 @@ public class DivisionController {
                 JSONObject j = new JSONObject();
 
                 for (Division div : division) {
+                    JSONObject jSONObject1 = new JSONObject();
+                    jSONObject1.put("divisionId", div.getDivisionId());
+                    jSONObject1.put("divisionName", div.getDivisionName());
+                    jSONObject1.put("divisionActive", div.getDivisionActive());
 
-                    jSONObject.put("divisionId", div.getDivisionId());
-                    jSONObject.put("divisionName", div.getDivisionName());
-                    jSONObject.put("divisionActive", div.getDivisionActive());
-
-                    jSONArray.add(jSONObject);
+                    jSONArray.add(jSONObject1);
                 }
                 j.put("divisionList", jSONArray);
 

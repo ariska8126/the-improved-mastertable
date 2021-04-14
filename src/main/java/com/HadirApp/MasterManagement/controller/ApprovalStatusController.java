@@ -72,10 +72,11 @@ public class ApprovalStatusController {
                 JSONObject j = new JSONObject();
 
                 for (ApprovalStatus a : ap) {
-                    jSONObject.put("approvalStatusId", a.getApprovalStatusId());
-                    jSONObject.put("approvalStatusName", a.getApprovalStatusName());
-                    jSONObject.put("approvalStatusActive", a.getApprovalStatusActive());
-                    jSONArray.add(jSONObject);
+                    JSONObject jSONObject1 = new JSONObject();
+                    jSONObject1.put("approvalStatusId", a.getApprovalStatusId());
+                    jSONObject1.put("approvalStatusName", a.getApprovalStatusName());
+                    jSONObject1.put("approvalStatusActive", a.getApprovalStatusActive());
+                    jSONArray.add(jSONObject1);
                 }
                 j.put("approvalStatusList", jSONArray);
 
@@ -224,7 +225,7 @@ public class ApprovalStatusController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId != 0) {
+            if (roleId == 1) {
                 System.out.println("you're authorized to access this operation");
 
                 int beforeInsert = maxApprovalStatus();

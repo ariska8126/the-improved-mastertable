@@ -88,7 +88,7 @@ public class BootcampController {
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
 
-            if (roleId != 5) {
+            if (roleId != 0) {
                 System.out.println("you're authorized to access this operation");
 
                 List<Bootcamp> bootcamp = bootcampRepository.findAll();
@@ -137,7 +137,7 @@ public class BootcampController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId == 1 || roleId == 4 || roleId == 2 || roleId == 5) {
                 System.out.println("you're authorized to access this operation");
 
                 List<Bootcamp> bootcamp = bootcampRepository.getActiveBootcamp();
@@ -186,7 +186,7 @@ public class BootcampController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId == 1 || roleId == 4 || roleId == 2 || roleId == 5) {
                 System.out.println("you're authorized to access this operation");
 
                 Optional<Bootcamp> bootcamp = bootcampRepository.findById(id);
@@ -240,7 +240,7 @@ public class BootcampController {
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
 
-            if (roleId != 5) {
+            if (roleId != 0) {
                 Iterable<Bootcamp> bootcamp = bootcampRepository.getBootcampByUser(id);
 
                 JSONArray jsonArray = new JSONArray();

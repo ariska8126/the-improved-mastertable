@@ -164,7 +164,7 @@ public class HolidayController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId == 1 || roleId == 4 || roleId == 2) {
                 System.out.println("you're authorized to access this operation");
 
                 Optional<CalendarHoliday> holiday = repository.findById(id);

@@ -63,7 +63,7 @@ public class AttendanceStatusController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId == 1 || roleId == 4 || roleId == 2 || roleId == 5) {
                 System.out.println("you're authorized to access this operation");
 
                 List<AttendanceStatus> attendanceStatus = attendanceStatusRepository.findAll();
@@ -78,7 +78,7 @@ public class AttendanceStatusController {
                     jsonObject.put("attendanceStatusName", as.getAttendanceStatusName());
                     jsonObject.put("attendanceStatusActive", as.getAttendanceStatusActive());
 
-                    jsonArray.add(jsonObject); 
+                    jsonArray.add(jsonObject);
                 }
 
                 jsonObject2.put("attendanceStatusList", jsonArray);
@@ -108,7 +108,7 @@ public class AttendanceStatusController {
         int cekIfExistToken = userRepository.findIfExistToken(header);
         System.out.println("exist token: " + cekIfExistToken);
 
-        if (cekIfExistToken == 1 ) {
+        if (cekIfExistToken == 1) {
             Users user = userRepository.findUserByToken(header);
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
@@ -164,7 +164,7 @@ public class AttendanceStatusController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId != 0) {
                 System.out.println("you're authorized to access this operation");
 
                 Optional<AttendanceStatus> attendanceStatusOptional = attendanceStatusRepository.findById(id);
@@ -182,7 +182,6 @@ public class AttendanceStatusController {
 
                     return jsonObject.toString();
                 }
-
 
                 jsonObject.put("attendanceStatusId", attendanceStatusOptional.get().getAttendanceStatusId());
                 jsonObject.put("attendanceStatusName", attendanceStatusOptional.get().getAttendanceStatusName());
@@ -274,8 +273,47 @@ public class AttendanceStatusController {
         return jSONObject.toJSONString();
     }
 
-    // CREATE
+    //new
     @PostMapping("/insertattendancestatus")
+    @ApiOperation(value = "Insert new attendance status")
+    public String insertNewAttendanceStatus(@RequestBody AttendanceStatus attendanceStatus,
+            @RequestHeader("bearer") String header) {
+
+        JSONObject jSONObject = new JSONObject();
+        System.out.println("bearer: " + header);
+        int cekIfExistToken = userRepository.findIfExistToken(header);
+        System.out.println("token exists status: " + cekIfExistToken);
+
+        if (cekIfExistToken == 1) {
+            Users users = userRepository.findUserByToken(header);
+            int roleId = users.getRoleId().getRoleId();
+            System.out.println("role: " + roleId);
+            System.out.println("username: " + users.getUserFullname());
+            if (roleId == 1) {
+                System.out.println("authorized");
+                attendanceStatusRepository.save(attendanceStatus);
+                jSONObject.put("status", "true");
+                jSONObject.put("description", "save successfully");
+                System.out.println("success");
+                return jSONObject.toJSONString();
+
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+                System.out.println("role not authorized");
+                return jSONObject.toJSONString();
+            }
+        }
+        jSONObject.put("status", "false");
+        jSONObject.put("description", "your token didn't authorized to access");
+        System.out.println("token not authorize");
+        return jSONObject.toJSONString();
+    }
+
+    // CREATE
+//    @PostMapping("/insertattendancestatus")
+    @PostMapping("/insertattendancestatusold")
     @ApiOperation(value = "${AttendanceStatusController.insert}")
     public String insertAttendance(@RequestBody AttendanceStatus attendanceStatus,
             @RequestHeader("bearer") String header) {
@@ -283,7 +321,7 @@ public class AttendanceStatusController {
         JSONObject jSONObject = new JSONObject();
         int cekIfExistToken = userRepository.findIfExistToken(header);
         System.out.println("exist token: " + cekIfExistToken);
-
+        System.out.println("bearer " + header);
         if (cekIfExistToken == 1) {
             Users user = userRepository.findUserByToken(header);
             System.out.println("user email: " + user.getUserEmail());
@@ -329,5 +367,45 @@ public class AttendanceStatusController {
 
         return jSONObject.toJSONString();
     }
-}
 
+    //create copy from approval
+    @PostMapping("/insertattendancestatusnew")
+    @ApiOperation(value = "${ApprovalStatusController.insert}")
+    public String insertApprovalStatus(@RequestBody AttendanceStatus approvalStatus,
+            @RequestHeader("bearer") String header) {
+
+        JSONObject jSONObject = new JSONObject();
+        System.out.println("barear: " + header);
+        int cekIfExistToken = userRepository.findIfExistToken(header);
+        System.out.println("exist token: " + cekIfExistToken);
+
+        if (cekIfExistToken == 1) {
+            Users user = userRepository.findUserByToken(header);
+            System.out.println("user email: " + user.getUserEmail());
+            int roleId = user.getRoleId().getRoleId();
+            System.out.println("roleId: " + roleId);
+            if (roleId == 1) {
+                System.out.println("you're authorized to access this operation");
+
+                attendanceStatusRepository.save(approvalStatus);
+//                System.out.println("access denied");
+                jSONObject.put("status", "true");
+                jSONObject.put("description", "success");
+
+                return jSONObject.toJSONString();
+
+            } else {
+                System.out.println("access denied");
+                jSONObject.put("status", "false");
+                jSONObject.put("description", "you don't have authorization to access");
+
+                return jSONObject.toJSONString();
+            }
+        } else {
+            jSONObject.put("status", "false");
+            jSONObject.put("description", "your token didn't authorized to access");
+
+            return jSONObject.toJSONString();
+        } 
+    }
+}
