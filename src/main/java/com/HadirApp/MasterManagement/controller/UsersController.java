@@ -147,6 +147,7 @@ public class UsersController {
                     jsona.add(jSONObject1);
                 }
                 jsono.put("EmployeeList", jsona);
+                jsono.put("status", "true");
 
                 return jsono.toString();
 
@@ -187,7 +188,7 @@ public class UsersController {
             jsona.add(jSONObject1);
         }
         jsono.put("userList", jsona);
-
+        jsono.put("status", "true");
         return jsono.toString();
         
     }
@@ -232,6 +233,7 @@ public class UsersController {
                     jsona.add(jSONObject1);
                 }
                 jsono.put("trainnerList", jsona);
+                jsono.put("status", "true");
 
                 return jsono.toString();
 
@@ -289,6 +291,7 @@ public class UsersController {
                     jsona.add(jSONObject1);
                 }
                 jsono.put("managerActiveList", jsona);
+                jsono.put("status", "true");
 
                 return jsono.toString();
             } else {
@@ -345,6 +348,7 @@ public class UsersController {
                     jsona.add(jSONObject1);
                 }
                 jsono.put("managerPassiveList", jsona);
+                jsono.put("status", "true");
 
                 return jsono.toString();
             } else {
@@ -401,6 +405,7 @@ public class UsersController {
                     jsona.add(jSONObject1);
                 }
                 jsono.put("adminList", jsona);
+                jsono.put("status", "true");
 
                 return jsono.toString();
             } else {
@@ -453,6 +458,7 @@ public class UsersController {
                     jsona.add(jSONObject1);
                 }
                 jsono.put("userActiveList", jsona);
+                jsono.put("status", "true");
 
                 return jsono.toString();
 
@@ -525,6 +531,7 @@ public class UsersController {
                 jsonArray.add(jSONObject1);
             }
             jsonObject.put("userList", jsonArray);
+            jsonObject.put("status", "true");
 
             return jsonObject.toString();
         }
@@ -687,7 +694,7 @@ public class UsersController {
             System.out.println("user email: " + user.getUserEmail());
             int roleIdC = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleIdC);
-            if (roleIdC == 1) {
+            if (roleIdC == 1 || roleIdC == 2) {
                 System.out.println("you're authorized to access this operation");
 
                 System.out.println("insert new user running");
@@ -938,7 +945,7 @@ public class UsersController {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
             Date date = new Date();
             String currentDate = formatter.format(date);
-            String bootcampDetailId = newID + bootcampId;
+            String bootcampDetailId = userId + bootcampId;
 
             // Save Bootcamp Detail
             BootcampDetail bootcampDetail = new BootcampDetail(bootcampDetailId, new Users(userId), new Bootcamp(bootcampId));
@@ -1076,7 +1083,7 @@ public class UsersController {
         JSONObject jSONObject1 = new JSONObject();
 
         jSONObject1.put("status", "true");
-        jSONObject1.put("description", "trainner removed");
+        jSONObject1.put("description", "trainer were unassign");
 
         return jSONObject1.toJSONString();
 

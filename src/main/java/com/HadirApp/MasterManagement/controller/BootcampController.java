@@ -6,7 +6,9 @@
 package com.HadirApp.MasterManagement.controller;
 
 import com.HadirApp.MasterManagement.entity.Bootcamp;
+import com.HadirApp.MasterManagement.entity.BootcampDetail;
 import com.HadirApp.MasterManagement.entity.Users;
+import com.HadirApp.MasterManagement.repository.BootcampDetailRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.net.URI;
@@ -26,7 +28,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.HadirApp.MasterManagement.repository.BootcampRepository;
 import com.HadirApp.MasterManagement.repository.UsersRepository;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -41,6 +42,9 @@ public class BootcampController {
 
     @Autowired
     BootcampRepository bootcampRepository;
+    
+    @Autowired
+    BootcampDetailRepository bootcampDetailRepository;
 
     @Autowired
     private UsersRepository userRepository;
@@ -155,6 +159,7 @@ public class BootcampController {
                 }
 
                 jsonObject2.put("bootcampList", jsonArray);
+                jsonObject2.put("status", "true");
 
                 return jsonObject2.toString();
             } else {
@@ -242,6 +247,7 @@ public class BootcampController {
 
             if (roleId != 0) {
                 Iterable<Bootcamp> bootcamp = bootcampRepository.getBootcampByUser(id);
+                Iterable<BootcampDetail> bootcampDetail = bootcampDetailRepository.getBootcampDetailByUser(id);
 
                 JSONArray jsonArray = new JSONArray();
                 JSONObject jsonObject2 = new JSONObject();
@@ -255,12 +261,14 @@ public class BootcampController {
 
                     return jsonObject2.toString();
                 } else {
-                    for (Bootcamp bl : bootcamp) {
+                    for (BootcampDetail bl : bootcampDetail) {
                         JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("bootcampId", bl.getBootcampId());
-                        jsonObject.put("bootcampName", bl.getBootcampName());
-                        jsonObject.put("bootcampLocation", bl.getBootcampLocation());
-                        jsonObject.put("bootcampActive", bl.getBootcampActive());
+                        jsonObject.put("bootcampId", bl.getBootcampId().getBootcampId());
+                        jsonObject.put("bootcampName", bl.getBootcampId().getBootcampName());
+                        jsonObject.put("bootcampLocation", bl.getBootcampId().getBootcampLocation());
+                        jsonObject.put("bootcampActive", bl.getBootcampId().getBootcampActive());
+                        jsonObject.put("bootcampDetailId", bl.getBootcampDetailId());
+                        
                         jsonArray.add(jsonObject);
                     }
 
@@ -298,7 +306,7 @@ public class BootcampController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId == 1 || roleId == 2) {
                 System.out.println("you're authorized to access this operation");
 
                 JSONArray jsonArray = new JSONArray();
@@ -367,7 +375,7 @@ public class BootcampController {
             System.out.println("user email: " + user.getUserEmail());
             int roleId = user.getRoleId().getRoleId();
             System.out.println("roleId: " + roleId);
-            if (roleId == 1) {
+            if (roleId == 1 || roleId == 2) {
                 System.out.println("you're authorized to access this operation");
 
                 int beforeInsert = maxId();

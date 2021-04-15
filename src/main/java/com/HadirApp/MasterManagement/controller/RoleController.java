@@ -130,6 +130,7 @@ public class RoleController {
                 }
 
                 jsonObject2.put("roleList", jsonArray);
+                jsonObject2.put("status", "true");
 
                 return jsonObject2.toString();
 

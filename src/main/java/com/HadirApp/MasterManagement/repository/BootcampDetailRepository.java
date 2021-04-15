@@ -25,4 +25,8 @@ public interface BootcampDetailRepository extends JpaRepository<BootcampDetail, 
     
     @Query(value = "SELECT IF(EXISTS(SELECT * FROM bootcamp_detail WHERE user_id = :userId and bootcamp_id = :bootcampId),1,0)", nativeQuery = true)
     public int findExistBootcampDetail(@Param ("userId") String userId, @Param("bootcampId") String bootcampId);
+    
+    @Query(value = "SELECT bootcamp.*,bootcamp_detail.* from bootcamp join bootcamp_detail on bootcamp.bootcamp_id = bootcamp_detail.bootcamp_id where bootcamp_detail.user_id = ?1", nativeQuery = true)
+    public Iterable<BootcampDetail> getBootcampDetailByUser(@Param("userId") String id);
+
 }

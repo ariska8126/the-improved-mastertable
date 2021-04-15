@@ -124,6 +124,7 @@ public class DivisionController {
                     jSONArray.add(jSONObject1);
                 }
                 j.put("divisionList", jSONArray);
+                j.put("status", "true");
 
                 return j.toString();
 
